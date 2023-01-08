@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_dp">16dp</dimen>
+    <dimen name="medium_text_size">22sp</dimen>
+    <dimen name="low_text_size">16sp</dimen>
+    <dimen name="zero_dp">0dp</dimen>
+    <dimen name="second_dp">21dp</dimen>
+    <dimen name="padding_top">22dp</dimen>
+</resources>
