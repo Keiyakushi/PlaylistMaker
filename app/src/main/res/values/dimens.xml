@@ -6,4 +6,5 @@
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="second_dp">21dp</dimen>
     <dimen name="padding_top">22dp</dimen>
+    <dimen name="twenty_dp">20dp</dimen>
 </resources>
