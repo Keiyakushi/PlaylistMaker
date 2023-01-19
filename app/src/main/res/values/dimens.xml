@@ -7,4 +7,6 @@
     <dimen name="second_dp">21dp</dimen>
     <dimen name="padding_top">22dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>
+    <dimen name="twenty_eight_dp">28dp</dimen>
+    <dimen name="forty_dp">40dp</dimen>
 </resources>
