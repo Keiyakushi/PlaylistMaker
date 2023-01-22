@@ -17,30 +17,29 @@ class SearchActivity : AppCompatActivity() {
         const val SEARCH_TEXT = "SEARCH_TEXT"
     }
 
+    private lateinit var inputText: EditText
+    private lateinit var savedText : String
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val inputText = findViewById<EditText>(R.id.search_edit_text)
-        val textValue: String = inputText.text.toString()
-        outState.putString(SEARCH_TEXT, textValue)
+        outState.putString(SEARCH_TEXT, savedText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val inputText = findViewById<EditText>(R.id.search_edit_text)
-        val text = savedInstanceState.getString(SEARCH_TEXT, "")
-        inputText.setText(text)
+        savedText = savedInstanceState.getString(SEARCH_TEXT, "")
+        inputText = findViewById(R.id.search_edit_text)
+        inputText.setText(savedText)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         val clearButton = findViewById<ImageView>(R.id.clear_text)
-        val inputText = findViewById<EditText>(R.id.search_edit_text)
+        inputText = findViewById(R.id.search_edit_text)
         val image = findViewById<ImageView>(R.id.back_icon_search)
         inputText.requestFocus()
         image.setOnClickListener {
-            val backIntent = Intent(this, MainActivity::class.java)
-            startActivity(backIntent)
+            finish()
         }
         clearButton.setOnClickListener {
             inputText.setText("")
@@ -63,6 +62,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 clearButton.visibility = clearButtonVisibility(p0)
+                savedText = p0.toString()
             }
 
             override fun afterTextChanged(p0: Editable?) {
