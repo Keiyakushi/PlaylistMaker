@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MainButton">
+        <item name="android:layout_weight">1</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="cornerRadius">@dimen/primary_dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+        <item name="iconTint">@color/icons</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="SettingsTextView">
+        <item name="android:paddingStart">@dimen/primary_dp</item>
+        <item name="android:paddingTop">@dimen/second_dp</item>
+        <item name="android:paddingRight">@dimen/twenty_dp</item>
+        <item name="android:paddingBottom">@dimen/second_dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/low_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+</resources>
