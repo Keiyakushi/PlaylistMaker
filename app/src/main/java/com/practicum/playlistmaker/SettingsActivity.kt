@@ -1,11 +1,16 @@
 package com.practicum.playlistmaker
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Switch
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,10 +18,18 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val image = findViewById<ImageView>(R.id.back_icon)
         image.setOnClickListener {
-            val backIntent = Intent(this, MainActivity::class.java)
-            startActivity(backIntent)
+            finish()
         }
         val settingsShare = findViewById<FrameLayout>(R.id.settingsShare)
+        val switchThemeMode = findViewById<Switch>(R.id.switch_theme_mode)
+        switchThemeMode.setOnCheckedChangeListener { button, isChecked ->
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+            }
+        }
+
         settingsShare.setOnClickListener {
             val url = Uri.parse(getString(R.string.url_yandex))
             val share = Intent(Intent.ACTION_SEND)
@@ -27,11 +40,12 @@ class SettingsActivity : AppCompatActivity() {
         val settingsSuport = findViewById<FrameLayout>(R.id.settingsSuport)
         settingsSuport.setOnClickListener {
             val message = getString(R.string.message)
-            val support = Intent(Intent.ACTION_SENDTO)
-            support.data = Uri.parse("mailto:")
-            support.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail)))
-            support.putExtra(Intent.EXTRA_SUBJECT, arrayOf(getString(R.string.subject)))
-            support.putExtra(Intent.EXTRA_TEXT, message)
+            val support = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail)))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject))
+                putExtra(Intent.EXTRA_TEXT, message)
+            }
             startActivity(support)
         }
         val userAgreement = findViewById<FrameLayout>(R.id.userAgreement)
