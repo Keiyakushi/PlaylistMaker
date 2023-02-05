@@ -14,5 +14,6 @@
         <!-- Customize your theme here. -->
         <item name="button_clear">@color/grey_2</item>
         <item name="background_search">@color/grey</item>
+        <item name="track_text">@color/track_text</item>
     </style>
 </resources>

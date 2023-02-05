@@ -13,4 +13,7 @@
     <string name="mail">nikulin-7@ya.ru</string>
     <string name="subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="agreement">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="track_time">Track time</string>
+    <string name="artrist_name">Artrist name</string>
+    <string name="track_name">Track name</string>
 </resources>
