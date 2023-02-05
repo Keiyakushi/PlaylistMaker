@@ -2,4 +2,5 @@
 <resources>
     <attr name="button_clear" format="reference"/>
     <attr name="background_search" format="reference"/>
+    <attr name="track_text" format="reference"/>
 </resources>
