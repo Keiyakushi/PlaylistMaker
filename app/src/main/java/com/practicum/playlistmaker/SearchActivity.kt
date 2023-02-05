@@ -27,7 +27,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private lateinit var inputText: EditText
-    private lateinit var savedText: String
+    var savedText: String = ""
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_TEXT, savedText)
@@ -47,8 +47,9 @@ class SearchActivity : AppCompatActivity() {
         inputText = findViewById(R.id.search_edit_text)
         val image = findViewById<ImageView>(R.id.back_icon_search)
         inputText.requestFocus()
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
+            layoutManager = LinearLayoutManager(this@SearchActivity)
+        }
         val trackList = arrayListOf(
             Track(
                 "Smells Like Teen Spirit",
@@ -113,41 +114,5 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputText.addTextChangedListener(textWatcher)
-    }
-
-    data class Track(
-        val trackName: String, val artistName: String,
-        val trackTime: String, val artworkUrl100: String
-    )
-
-    class TrackViewHolder(parentView: ViewGroup) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parentView.context).inflate(R.layout.track_list_view, parentView, false)
-    ) {
-        private val trackName = itemView.findViewById<TextView>(R.id.track_name)
-        private val artistName: TextView = itemView.findViewById(R.id.artist_name)
-        private val trackTime: TextView = itemView.findViewById(R.id.track_time)
-        private val artwork: ImageView = itemView.findViewById(R.id.artwork)
-        fun bind(model: Track) {
-            trackName.text = model.trackName
-            artistName.text = model.artistName
-            trackTime.text = model.trackTime
-            Glide.with(itemView)
-                .load(model.artworkUrl100)
-                .placeholder(R.drawable.ic_none_image)
-                .centerCrop()
-                .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.corner_dp)))
-                .into(artwork)
-        }
-    }
-
-    class TrackAdapter(private val tracks: List<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TrackViewHolder(parent)
-
-        override fun getItemCount() = tracks.size
-
-        override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-            holder.bind(tracks[position])
-        }
     }
 }
