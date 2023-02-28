@@ -38,7 +38,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
 
         <EditText
             android:id="@+id/search_edit_text"
@@ -48,6 +49,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginRight="@dimen/primary_dp"
             android:background="@drawable/rounded_edittext"
+            android:textCursorDrawable="@drawable/cursor_edit_text"
             android:focusable="true"
             android:hint="@string/hint_search"
             android:inputType="text"

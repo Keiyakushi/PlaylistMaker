@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
     android:orientation="horizontal">
 
     <ImageView
@@ -46,14 +45,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/artrist_name"
                 android:textColor="?attr/colorSecondaryVariant"
-                android:textSize="11sp" />
+                android:textSize="@dimen/little_text_size" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="@dimen/five_dp"
                 android:layout_marginTop="6dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="@dimen/five_dp"
                 android:layout_marginBottom="19dp"
                 android:src="@drawable/ic_ellipse_1"
                 app:tint = "?attr/colorSecondaryVariant"/>
@@ -64,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/track_time"
                 android:textColor="?attr/colorSecondaryVariant"
-                android:textSize="11sp" />
+                android:textSize="@dimen/little_text_size" />
         </LinearLayout>
     </LinearLayout>
 
