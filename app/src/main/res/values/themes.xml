@@ -15,5 +15,8 @@
         <item name="button_clear">@color/grey_2</item>
         <item name="background_search">@color/grey</item>
         <item name="track_text">@color/track_text</item>
+        <item name="nothing_found">@drawable/ic_nothing_search_light</item>
+        <item name="wrong_internet">@drawable/ic_wrong_internet_light</item>
+        <item name="reload_button">@color/icons</item>
     </style>
 </resources>

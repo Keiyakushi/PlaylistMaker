@@ -3,4 +3,7 @@
     <attr name="button_clear" format="reference"/>
     <attr name="background_search" format="reference"/>
     <attr name="track_text" format="reference"/>
+    <attr name="nothing_found" format="reference"/>
+    <attr name="wrong_internet" format="reference"/>
+    <attr name="reload_button" format="reference"/>
 </resources>
