@@ -16,4 +16,8 @@
     <string name="track_time">Track time</string>
     <string name="artrist_name">Artrist name</string>
     <string name="track_name">Track name</string>
+    <string name="internet_wrong_2">Загрузка не удалась.Проверьте</string>
+    <string name="internet_wrong">Проблемы со связью</string>
+    <string name="reload">Обновить</string>
+    <string name="internet_wrong_3">подключение к интернету</string>
 </resources>
