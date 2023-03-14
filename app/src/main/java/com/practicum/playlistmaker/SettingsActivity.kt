@@ -11,6 +11,7 @@ import android.widget.Switch
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,13 +22,12 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
         val settingsShare = findViewById<FrameLayout>(R.id.settingsShare)
-        val switchThemeMode = findViewById<Switch>(R.id.switch_theme_mode)
+        val switchThemeMode = findViewById<SwitchMaterial>(R.id.switch_theme_mode)
+        switchThemeMode.isChecked = getSharedPreferences(PREFERENCES, MODE_PRIVATE).getBoolean(
+            SWITCH_PREFERENCES_KEY,false)
         switchThemeMode.setOnCheckedChangeListener { button, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
-            }
+            (applicationContext as App).switchTheme(isChecked)
+            (applicationContext as App).saveTheme(isChecked)
         }
 
         settingsShare.setOnClickListener {
