@@ -30,7 +30,8 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
     }
-
+    private val historyList = ArrayList<Track>()
+    private val trackList = ArrayList<Track>()
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
@@ -38,6 +39,8 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val iTunesService = retrofit.create(iTunesApi::class.java)
     private lateinit var inputText: EditText
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var historySearchList: RecyclerView
     var savedText: String = ""
 
 
@@ -53,6 +56,11 @@ class SearchActivity : AppCompatActivity() {
         inputText.setText(savedText)
     }
 
+    override fun onStop() {
+        super.onStop()
+        searchHistory.saveHistory(historyList)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -63,13 +71,38 @@ class SearchActivity : AppCompatActivity() {
         val noResult = findViewById<FrameLayout>(R.id.iw_no_result_layout)
         val noConnection = findViewById<FrameLayout>(R.id.iw_no_connection_layout)
         val reloadButton = findViewById<Button>(R.id.bt_update)
-        inputText.requestFocus()
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
+        val yourSearchText = findViewById<TextView>(R.id.your_search_text)
+        val clearHistoryButton = findViewById<Button>(R.id.bt_history_clear)
+        historySearchList = findViewById(R.id.history_search_list)
+        val historyLayout = findViewById<LinearLayout>(R.id.history_layout)
+        historySearchList.layoutManager = LinearLayoutManager(this)
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val trackAdapter = TrackAdapter{
+            addTrackToHistory(it)
         }
-        val trackList = ArrayList<Track>()
-        val trackAdapter = TrackAdapter(trackList)
+        trackAdapter.trackAdapterList = trackList
         recyclerView.adapter = trackAdapter
+        searchHistory = SearchHistory(getSharedPreferences(PREFERENCES, MODE_PRIVATE))
+        val trackHistoryAdapter = TrackAdapter {
+            Toast.makeText(this@SearchActivity, "press on track", Toast.LENGTH_SHORT).show()
+        }
+        trackHistoryAdapter.trackAdapterList = historyList
+        historySearchList.adapter = trackHistoryAdapter
+
+
+        inputText.setOnFocusChangeListener { view, hasFocus ->
+            if(hasFocus && inputText.text.isEmpty() && historyList.isNotEmpty()){
+                historyLayout.visibility = View.VISIBLE
+            } else historyLayout.visibility = View.GONE
+        }
+        clearHistoryButton.setOnClickListener{
+            historyList.clear()
+            historySearchList.adapter?.notifyDataSetChanged()
+            historyLayout.visibility = View.GONE
+        }
+
+
 
         image.setOnClickListener {
             finish()
@@ -79,9 +112,7 @@ class SearchActivity : AppCompatActivity() {
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(clearButton.windowToken, 0)
-            recycler.visibility = View.GONE
-            noResult.visibility = View.GONE
-            noConnection.visibility = View.GONE
+            search(SearchStatus.START)
         }
         fun clearButtonVisibility(s: CharSequence?): Int {
             return if (s.isNullOrEmpty()) {
@@ -103,22 +134,16 @@ class SearchActivity : AppCompatActivity() {
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 trackList.addAll(response.body()?.results!!)
                                 trackAdapter.notifyDataSetChanged()
-                                recycler.visibility = View.VISIBLE
-                                noResult.visibility = View.GONE
-                                noConnection.visibility = View.GONE
+                                search(SearchStatus.SUCCESS)
                             }
                             if (trackList.isEmpty()) {
-                                recycler.visibility = View.GONE
-                                noResult.visibility = View.VISIBLE
-                                noConnection.visibility = View.GONE
+                                search(SearchStatus.EMPTY_SEARCH)
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                        recycler.visibility = View.GONE
-                        noResult.visibility = View.GONE
-                        noConnection.visibility = View.VISIBLE
+                        search(SearchStatus.CONNECTION_ERROR)
                         reloadButton.setOnClickListener {
                             responseTrack(savedText)
                         }
@@ -143,14 +168,85 @@ class SearchActivity : AppCompatActivity() {
                     }
                     false
                 }
+                historyLayout.visibility =
+                    if (inputText.text.isEmpty()) View.VISIBLE
+                    else View.GONE
+                    if (historyList.isEmpty()) {
+                        clearHistoryButton.visibility = View.GONE
+                        yourSearchText.visibility = View.GONE
+                    } else {
+                        clearHistoryButton.visibility = View.VISIBLE
+                        yourSearchText.visibility = View.VISIBLE
+                    }
             }
 
             override fun afterTextChanged(p0: Editable?) {
 
             }
         }
-
+        historyList.addAll(searchHistory.readHistory())
         inputText.addTextChangedListener(textWatcher)
     }
+    enum class SearchStatus { SUCCESS, CONNECTION_ERROR, EMPTY_SEARCH,START }
+    fun addTrackToHistory(track: Track) = when {
 
+        historyList.contains(track) -> {
+
+            val position = historyList.indexOf(track)
+
+            historyList.remove(track)
+            historySearchList.adapter?.notifyItemRemoved(position)
+            historySearchList.adapter?.notifyItemRangeChanged(position, historyList.size)
+
+            historyList.add(0, track)
+            historySearchList.adapter?.notifyItemInserted(0)
+            historySearchList.adapter?.notifyItemRangeChanged(0, historyList.size)
+        }
+
+        historyList.size < 10 -> {
+
+            historyList.add(0, track)
+            historySearchList.adapter?.notifyItemInserted(0)
+            historySearchList.adapter?.notifyItemRangeChanged(0, historyList.size)
+        }
+
+        else -> {
+
+            historyList.removeAt(9)
+            historySearchList.adapter?.notifyItemRemoved(9)
+            historySearchList.adapter?.notifyItemRangeChanged(9, historyList.size)
+
+            historyList.add(0, track)
+            historySearchList.adapter?.notifyItemInserted(0)
+            historySearchList.adapter?.notifyItemRangeChanged(0, historyList.size)
+        }
+    }
+
+    private fun search(search: SearchStatus) {
+        val recycler = findViewById<RecyclerView>(R.id.recycler_view)
+        val noResult = findViewById<FrameLayout>(R.id.iw_no_result_layout)
+        val noConnection = findViewById<FrameLayout>(R.id.iw_no_connection_layout)
+        when (search) {
+            SearchStatus.SUCCESS -> {
+                recycler.visibility = View.VISIBLE
+                noResult.visibility = View.GONE
+                noConnection.visibility = View.GONE
+            }
+            SearchStatus.CONNECTION_ERROR -> {
+                recycler.visibility = View.GONE
+                noResult.visibility = View.GONE
+                noConnection.visibility = View.VISIBLE
+            }
+            SearchStatus.EMPTY_SEARCH -> {
+                recycler.visibility = View.GONE
+                noResult.visibility = View.VISIBLE
+                noConnection.visibility = View.GONE
+            }
+            SearchStatus.START ->{
+                recycler.visibility = View.GONE
+                noResult.visibility = View.GONE
+                noConnection.visibility = View.GONE
+            }
+        }
+    }
 }

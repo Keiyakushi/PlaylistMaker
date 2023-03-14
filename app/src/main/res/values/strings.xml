@@ -20,4 +20,7 @@
     <string name="internet_wrong">Проблемы со связью</string>
     <string name="reload">Обновить</string>
     <string name="internet_wrong_3">подключение к интернету</string>
+    <string name="nothing_search">Ничего не нашлось</string>
+    <string name="your_search">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
 </resources>
