@@ -53,7 +53,7 @@
             android:fontFamily="@font/ys_display_medium"
             android:textFontWeight="500"/>
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/switch_theme_mode"
@@ -61,8 +61,7 @@
             android:gravity="end"
             android:paddingTop="61dp"
             android:paddingRight="8dp"
-            android:trackTint="?attr/colorSecondaryVariant"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            />
     </FrameLayout>
 
     <FrameLayout

@@ -106,7 +106,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/second_dp"
             android:fontFamily="@font/ys_display_medium"
-            android:text="Ничего не нашлось"
+            android:text="@string/nothing_search"
             android:textColor="?attr/colorOnSecondary"
             android:textFontWeight="400"
             android:textSize="@dimen/small_text_size"
@@ -178,11 +178,63 @@
             android:fontFamily="@font/ys_display_medium"
             android:text="@string/reload"
             android:textAllCaps="false"
+            android:textFontWeight="500"
             android:textColor="?attr/colorSecondary"
             android:textSize="14sp"
             app:cornerRadius="56dp" />
 
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/history_layout"
+        android:layout_marginTop="@dimen/padding_top"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/your_search_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/your_search"
+            android:textColor="?attr/colorOnSecondary"
+            android:textFontWeight="500"
+            android:textSize="@dimen/small_text_size"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:animationCache="true"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/history_search_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            <Button
+                android:id="@+id/bt_history_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:backgroundTint="?attr/reload_button"
+                android:fontFamily="@font/ys_display_medium"
+                android:text="@string/clear_history"
+                android:layout_marginBottom="@dimen/twenty_eight_dp"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorSecondary"
+                android:textFontWeight="500"
+                android:textSize="14sp"
+                app:cornerRadius="56dp" />
+        </FrameLayout>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
