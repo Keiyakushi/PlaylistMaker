@@ -15,7 +15,20 @@ class App : Application() {
         darkTheme = getSharedPreferences(PREFERENCES, MODE_PRIVATE).getBoolean(
             SWITCH_PREFERENCES_KEY, false
         )
+        setMode()
+    }
 
+    fun switchTheme(darkThemeEnabled: Boolean) {
+
+        darkTheme = darkThemeEnabled
+        setMode()
+        getSharedPreferences(PREFERENCES, MODE_PRIVATE)
+            .edit()
+            .putBoolean(SWITCH_PREFERENCES_KEY, darkThemeEnabled)
+            .apply()
+    }
+
+    fun setMode(){
         AppCompatDelegate.setDefaultNightMode(
             if (darkTheme) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -23,25 +36,5 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-    }
-
-    fun switchTheme(darkThemeEnabled: Boolean) {
-
-        darkTheme = darkThemeEnabled
-
-        AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
-    }
-
-    fun saveTheme(darkThemeEnabled: Boolean) {
-        getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-            .edit()
-            .putBoolean(SWITCH_PREFERENCES_KEY, darkThemeEnabled)
-            .apply()
     }
 }

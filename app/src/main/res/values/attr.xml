@@ -6,4 +6,7 @@
     <attr name="nothing_found" format="reference"/>
     <attr name="wrong_internet" format="reference"/>
     <attr name="reload_button" format="reference"/>
+    <attr name="add_playlist" format="reference"/>
+    <attr name="bt_play" format="reference"/>
+    <attr name="bt_follow" format="reference"/>
 </resources>

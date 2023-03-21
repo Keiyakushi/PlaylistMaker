@@ -19,10 +19,7 @@ class MainActivity : AppCompatActivity() {
          val searchIntent = Intent(this,SearchActivity::class.java)
          startActivity(searchIntent)
         }
-        button2.setOnClickListener{
-            val mediaIntent = Intent(this,MediaActivity::class.java)
-            startActivity(mediaIntent)
-        }
+
         button3.setOnClickListener{
             val settingsIntent = Intent(this,SettingsActivity::class.java)
             startActivity(settingsIntent)

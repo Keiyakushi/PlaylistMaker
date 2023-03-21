@@ -23,4 +23,20 @@
     <string name="nothing_search">Ничего не нашлось</string>
     <string name="your_search">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="timing">0:30</string>
+    <string name="duration">Длительность</string>
+    <string name="time_2">5:35</string>
+    <string name="album">Альбом</string>
+    <string name="album_name">Название альбома</string>
+    <string name="year">Год</string>
+    <string name="year_2023">2023</string>
+    <string name="genre">Жанр</string>
+    <string name="genre_name">Rock</string>
+    <string name="country">Страна</string>
+    <string name="country_name">Россия</string>
+    <string name="bt_back">Кнопка назад</string>
+    <string name="placeholder">Плейсхолдер</string>
+    <string name="add_playlist">Добавить плейлист</string>
+    <string name="bt_play">Кнопка плейера</string>
+    <string name="bt_like">Кнопка лайка</string>
 </resources>

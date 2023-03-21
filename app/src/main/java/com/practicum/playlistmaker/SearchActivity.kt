@@ -20,15 +20,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
+enum class SearchStatus { SUCCESS, CONNECTION_ERROR, EMPTY_SEARCH,START }
 class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val MEDIA_KEY = "MEDIA_KEY"
     }
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
@@ -61,31 +63,33 @@ class SearchActivity : AppCompatActivity() {
         searchHistory.saveHistory(historyList)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        searchHistory.saveHistory(historyList)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         val clearButton = findViewById<ImageView>(R.id.clear_text)
         inputText = findViewById(R.id.search_edit_text)
         val image = findViewById<ImageView>(R.id.back_icon_search)
-        val recycler = findViewById<RecyclerView>(R.id.recycler_view)
-        val noResult = findViewById<FrameLayout>(R.id.iw_no_result_layout)
-        val noConnection = findViewById<FrameLayout>(R.id.iw_no_connection_layout)
         val reloadButton = findViewById<Button>(R.id.bt_update)
         val yourSearchText = findViewById<TextView>(R.id.your_search_text)
         val clearHistoryButton = findViewById<Button>(R.id.bt_history_clear)
         historySearchList = findViewById(R.id.history_search_list)
         val historyLayout = findViewById<LinearLayout>(R.id.history_layout)
-        historySearchList.layoutManager = LinearLayoutManager(this)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
         val trackAdapter = TrackAdapter{
             addTrackToHistory(it)
+            addToMedia(it)
         }
         trackAdapter.trackAdapterList = trackList
         recyclerView.adapter = trackAdapter
         searchHistory = SearchHistory(getSharedPreferences(PREFERENCES, MODE_PRIVATE))
         val trackHistoryAdapter = TrackAdapter {
-            Toast.makeText(this@SearchActivity, "press on track", Toast.LENGTH_SHORT).show()
+            addTrackToHistory(it)
+            addToMedia(it)
         }
         trackHistoryAdapter.trackAdapterList = historyList
         historySearchList.adapter = trackHistoryAdapter
@@ -187,8 +191,13 @@ class SearchActivity : AppCompatActivity() {
         historyList.addAll(searchHistory.readHistory())
         inputText.addTextChangedListener(textWatcher)
     }
-    enum class SearchStatus { SUCCESS, CONNECTION_ERROR, EMPTY_SEARCH,START }
-    fun addTrackToHistory(track: Track) = when {
+    private fun addToMedia(track:Track){
+        val intent = Intent(this,MediaActivity::class.java).apply{
+            putExtra(MEDIA_KEY, Gson().toJson(track))
+        }
+        startActivity(intent)
+    }
+    private fun addTrackToHistory(track: Track) = when {
 
         historyList.contains(track) -> {
 
