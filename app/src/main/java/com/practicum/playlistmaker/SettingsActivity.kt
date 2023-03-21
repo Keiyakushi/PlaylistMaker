@@ -27,7 +27,6 @@ class SettingsActivity : AppCompatActivity() {
             SWITCH_PREFERENCES_KEY,false)
         switchThemeMode.setOnCheckedChangeListener { button, isChecked ->
             (applicationContext as App).switchTheme(isChecked)
-            (applicationContext as App).saveTheme(isChecked)
         }
 
         settingsShare.setOnClickListener {
