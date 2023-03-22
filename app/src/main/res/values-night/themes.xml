@@ -21,5 +21,6 @@
         <item name="add_playlist">@drawable/ic_bt_add_playlist_dark</item>
         <item name="bt_play">@drawable/ic_bt_play_dark</item>
         <item name="bt_follow">@drawable/ic_bt_follow_dark</item>
+        <item name="bt_pause">@drawable/ic_bt_pause_dark</item>
     </style>
 </resources>
