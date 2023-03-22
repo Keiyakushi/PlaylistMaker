@@ -42,7 +42,7 @@ class MediaActivity : AppCompatActivity() {
             .load(track.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder_media)
             .centerCrop()
-            .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.corner_dp)))
+            .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.corner_album_cover)))
             .into(image_album)
         track_name.text = track.trackName
         artist_name.text = track.artistName
