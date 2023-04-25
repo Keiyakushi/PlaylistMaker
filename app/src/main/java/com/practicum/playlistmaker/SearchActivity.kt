@@ -33,8 +33,8 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val MEDIA_KEY = "MEDIA_KEY"
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
-        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
+        const val CLICK_DEBOUNCE_DELAY_MS = 1000L
     }
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
@@ -91,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
             val current = isClickAllowed
             if (isClickAllowed) {
                 isClickAllowed = false
-                handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+                handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MS)
             }
             return current
         }
@@ -137,6 +137,7 @@ class SearchActivity : AppCompatActivity() {
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(clearButton.windowToken, 0)
             search(SearchStatus.START)
+            progressBar.visibility = View.GONE
         }
         fun clearButtonVisibility(s: CharSequence?): Int {
             return if (s.isNullOrEmpty()) {
@@ -182,7 +183,7 @@ class SearchActivity : AppCompatActivity() {
         val searchRunnable = Runnable { responseTrack(savedText) }
         fun searchDebounce() {
             handler.removeCallbacks(searchRunnable)
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MS)
         }
 
         val textWatcher = object : TextWatcher {

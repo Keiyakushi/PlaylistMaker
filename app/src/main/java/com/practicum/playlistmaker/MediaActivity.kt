@@ -29,8 +29,9 @@ class MediaActivity : AppCompatActivity() {
     lateinit var timing: TextView
     var playerState = STATE_DEFAULT
     val mediaPlayer = MediaPlayer()
-    var mainThreadHandler: Handler? = null
-    var trackDuration : Int?= 30
+    var mainThreadHandler = Handler(Looper.getMainLooper())
+    var trackDuration : Int = 30000
+    var updateTm = updateTimer()
     override fun onPause() {
         super.onPause()
         pausePlayer()
@@ -58,7 +59,6 @@ class MediaActivity : AppCompatActivity() {
         val year_release = findViewById<TextView>(R.id.year_score)
         val genre = findViewById<TextView>(R.id.genre_name)
         val country = findViewById<TextView>(R.id.country_name)
-        mainThreadHandler = Handler(Looper.getMainLooper())
         var track = Gson().fromJson((intent.getStringExtra(MEDIA_KEY)), Track::class.java)
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
@@ -74,12 +74,9 @@ class MediaActivity : AppCompatActivity() {
         genre.text = track.primaryGenreName
         country.text = track.country
         layout_media.visibility = View.VISIBLE
-        var url : String? = track.previewUrl
-
-        if (url!=null) {
-            mediaPlayer.setDataSource(url)
-            preparePlayer()
-        }
+        val url : String = track.previewUrl
+        mediaPlayer.setDataSource(url)
+        preparePlayer()
         bt_play.setOnClickListener {
             playbackControl()
         }
@@ -88,43 +85,28 @@ class MediaActivity : AppCompatActivity() {
         }
     }
     fun preparePlayer() {
-        var theme = this.getSharedPreferences(PREFERENCES, MODE_PRIVATE).getBoolean(
-            SWITCH_PREFERENCES_KEY, false
-        )
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             bt_play.isEnabled = true
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            if (theme){
-                bt_play.setImageResource(R.drawable.ic_bt_play_dark)
-            } else bt_play.setImageResource(R.drawable.ic_bt_play)
-            mainThreadHandler?.removeCallbacksAndMessages(null)
+            bt_play.setImageResource(R.drawable.ic_bt_play)
+            mainThreadHandler?.removeCallbacksAndMessages(updateTm)
             playerState = STATE_PREPARED
             timing.text = "00:00"
         }
     }
     fun startPlayer() {
-        var theme = this.getSharedPreferences(PREFERENCES, MODE_PRIVATE).getBoolean(
-            SWITCH_PREFERENCES_KEY, false
-        )
         mediaPlayer.start()
-        if (theme){
-            bt_play.setImageResource(R.drawable.ic_bt_pause_dark)
-        } else bt_play.setImageResource(R.drawable.ic_bt_pause)
+        bt_play.setImageResource(R.drawable.ic_bt_pause)
         startTimer()
         playerState = STATE_PLAYING
     }
     fun pausePlayer() {
-        var theme = this.getSharedPreferences(PREFERENCES, MODE_PRIVATE).getBoolean(
-            SWITCH_PREFERENCES_KEY, false
-        )
         mediaPlayer.pause()
-        if (theme){
-            bt_play.setImageResource(R.drawable.ic_bt_play_dark)
-        } else bt_play.setImageResource(R.drawable.ic_bt_play)
-        mainThreadHandler?.removeCallbacks {updateTimer()}
+        bt_play.setImageResource(R.drawable.ic_bt_play)
+        mainThreadHandler?.removeCallbacksAndMessages(updateTm)
         playerState = STATE_PAUSED
     }
     fun playbackControl() {
@@ -139,14 +121,15 @@ class MediaActivity : AppCompatActivity() {
     }
     fun startTimer() {
         mainThreadHandler?.post(
-            updateTimer()
+            updateTm
         )
     }
+
     fun updateTimer() : Runnable{
         return object : Runnable{
             override fun run() {
                 val elapsedTime = mediaPlayer.currentPosition
-                val remainingTime = 30000 - elapsedTime
+                val remainingTime = trackDuration - elapsedTime
                 if(remainingTime > 0){
                     timing.text = SimpleDateFormat(
                         "mm:ss",
