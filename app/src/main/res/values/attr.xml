@@ -9,4 +9,5 @@
     <attr name="add_playlist" format="reference"/>
     <attr name="bt_play" format="reference"/>
     <attr name="bt_follow" format="reference"/>
+    <attr name="bt_pause" format="reference"/>
 </resources>

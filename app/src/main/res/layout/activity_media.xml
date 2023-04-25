@@ -221,6 +221,7 @@
         android:textFontWeight="400"
         android:textSize="@dimen/thirteen_sp"
         android:textStyle="bold"
+        android:gravity="end"
         app:layout_constraintEnd_toEndOf="@+id/right_guideline_16dp"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/album"

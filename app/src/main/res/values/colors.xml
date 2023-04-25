@@ -13,4 +13,5 @@
     <color name="grey">#E6E8EB</color>
     <color name="grey_2">#AEAFB4</color>
     <color name="track_text">#000000</color>
+    <color name="progress_bar">#6200EE</color>
 </resources>

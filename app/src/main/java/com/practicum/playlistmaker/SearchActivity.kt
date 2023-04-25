@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -31,6 +33,8 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val MEDIA_KEY = "MEDIA_KEY"
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
     }
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
@@ -80,16 +84,32 @@ class SearchActivity : AppCompatActivity() {
         historySearchList = findViewById(R.id.history_search_list)
         val historyLayout = findViewById<LinearLayout>(R.id.history_layout)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        var isClickAllowed = true
+        val handler = Handler(Looper.getMainLooper())
+        fun clickDebounce() : Boolean {
+            val current = isClickAllowed
+            if (isClickAllowed) {
+                isClickAllowed = false
+                handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            }
+            return current
+        }
+
         val trackAdapter = TrackAdapter{
-            addTrackToHistory(it)
-            addToMedia(it)
+            if (clickDebounce()) {
+                addTrackToHistory(it)
+                addToMedia(it)
+            }
         }
         trackAdapter.trackAdapterList = trackList
         recyclerView.adapter = trackAdapter
         searchHistory = SearchHistory(getSharedPreferences(PREFERENCES, MODE_PRIVATE))
         val trackHistoryAdapter = TrackAdapter {
-            addTrackToHistory(it)
-            addToMedia(it)
+            if (clickDebounce()) {
+                addTrackToHistory(it)
+                addToMedia(it)
+            }
         }
         trackHistoryAdapter.trackAdapterList = historyList
         historySearchList.adapter = trackHistoryAdapter
@@ -125,14 +145,16 @@ class SearchActivity : AppCompatActivity() {
                 View.VISIBLE
             }
         }
-
         fun responseTrack(searchText: String) {
             if (searchText.isNotEmpty()) {
+                search(SearchStatus.START)
+                progressBar.visibility = View.VISIBLE
                 iTunesService.search(searchText).enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
                         call: Call<TrackResponse>,
                         response: Response<TrackResponse>
                     ) {
+                        progressBar.visibility = View.GONE
                         if (response.code() == 200) {
                             trackList.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
@@ -147,6 +169,7 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                        progressBar.visibility = View.GONE
                         search(SearchStatus.CONNECTION_ERROR)
                         reloadButton.setOnClickListener {
                             responseTrack(savedText)
@@ -155,6 +178,11 @@ class SearchActivity : AppCompatActivity() {
 
                 })
             }
+        }
+        val searchRunnable = Runnable { responseTrack(savedText) }
+        fun searchDebounce() {
+            handler.removeCallbacks(searchRunnable)
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
         }
 
         val textWatcher = object : TextWatcher {
@@ -172,6 +200,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                     false
                 }
+                searchDebounce()
                 historyLayout.visibility =
                     if (inputText.text.isEmpty()) View.VISIBLE
                     else View.GONE
