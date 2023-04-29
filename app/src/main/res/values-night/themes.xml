@@ -19,8 +19,8 @@
         <item name="wrong_internet">@drawable/ic_wrong_internet_dark</item>
         <item name="reload_button">@color/white</item>
         <item name="add_playlist">@drawable/ic_bt_add_playlist_dark</item>
-        <item name="bt_play">@drawable/ic_bt_play_dark</item>
+        <item name="bt_play">@color/white</item>
         <item name="bt_follow">@drawable/ic_bt_follow_dark</item>
-        <item name="bt_pause">@drawable/ic_bt_pause_dark</item>
+        <item name="bt_pause">@color/white</item>
     </style>
 </resources>

@@ -19,8 +19,8 @@
         <item name="wrong_internet">@drawable/ic_wrong_internet_light</item>
         <item name="reload_button">@color/icons</item>
         <item name="add_playlist">@drawable/ic_bt_add_playlist</item>
-        <item name="bt_play">@drawable/ic_bt_play</item>
+        <item name="bt_play">@color/icons</item>
         <item name="bt_follow">@drawable/ic_bt_follow</item>
-        <item name="bt_pause">@drawable/ic_bt_pause</item>
+        <item name="bt_pause">@color/icons</item>
     </style>
 </resources>
