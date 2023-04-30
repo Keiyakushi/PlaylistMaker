@@ -1,10 +1,7 @@
 package com.practicum.playlistmaker.player
 
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -15,10 +12,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.Track
-import com.practicum.playlistmaker.player.data.DataPlayer
+import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.data.PlayerRepository
 import com.practicum.playlistmaker.player.presenter.PlayerPresentor
 import com.practicum.playlistmaker.player.presenter.PlayerView
+import com.practicum.playlistmaker.player.presenter.Router
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,7 +27,7 @@ class MediaActivity : AppCompatActivity(),PlayerView {
     lateinit var bt_play: ImageButton
     lateinit var timing: TextView
     lateinit var presentor: PlayerPresentor
-    lateinit var dataPlayer: DataPlayer
+    lateinit var mediaPlayerInteractor: MediaPlayerInteractor
     lateinit var playerRepository: PlayerRepository
     lateinit var track_name : TextView
     lateinit var artist_name : TextView
@@ -43,8 +41,11 @@ class MediaActivity : AppCompatActivity(),PlayerView {
     lateinit var back_icon : ImageView
     lateinit var bt_add_playlist : ImageButton
     lateinit var bt_follow : ImageButton
+    lateinit var interactor : MediaPlayerInteractor
     var trackDuration : Int = 30000
     var url : String = ""
+    val router = Router(this)
+
     override fun onPause() {
         super.onPause()
         presentor.pausePlayer()
@@ -54,14 +55,16 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         super.onDestroy()
         presentor.destroyPlayer()
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media)
         uiInit()
-        dataPlayer = DataPlayer()
-        playerRepository = PlayerRepository(url)
-        presentor = PlayerPresentor(this,playerRepository)
+        playerRepository = PlayerRepository(router.getUrl().previewUrl)
+        interactor = MediaPlayerInteractor(playerRepository)
+        presentor = PlayerPresentor(this,interactor)
         presentor.preparePlayer()
+
         bt_play.setOnClickListener {
             presentor.onBtPlayClicked()
         }
@@ -115,7 +118,6 @@ class MediaActivity : AppCompatActivity(),PlayerView {
 
     override fun getData() {
         var track = Gson().fromJson((intent.getStringExtra(MEDIA_KEY)), Track::class.java)
-
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder_media)

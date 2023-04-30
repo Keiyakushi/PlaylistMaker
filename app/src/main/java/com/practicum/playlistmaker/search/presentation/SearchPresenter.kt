@@ -59,8 +59,8 @@ class SearchPresenter (
         when {
             historyList.contains(track) -> {
                 historyList.remove(track)
-                view.historyListRemove(track)
                 historyList.add(0, track)
+                view.historyListRemove(track)
                 view.historyListAdd()
             }
 
@@ -71,8 +71,8 @@ class SearchPresenter (
 
             else -> {
                 historyList.removeAt(9)
-                view.historyListRemoveAt()
                 historyList.add(0, track)
+                view.historyListRemoveAt()
                 view.historyListAdd()
             }
         }

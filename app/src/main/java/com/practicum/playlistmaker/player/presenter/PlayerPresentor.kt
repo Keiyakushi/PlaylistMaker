@@ -1,20 +1,16 @@
 package com.practicum.playlistmaker.player.presenter
 
-import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import androidx.core.os.postDelayed
-import com.practicum.playlistmaker.player.MediaActivity
-import com.practicum.playlistmaker.player.data.DataPlayer
 import com.practicum.playlistmaker.player.data.PlayerRepository
+import com.practicum.playlistmaker.player.domain.IMediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
-import java.text.SimpleDateFormat
-import java.util.*
+import com.practicum.playlistmaker.search.domain.SearchInteractor
 
 
 class PlayerPresentor(
     private val view:PlayerView,
-    private val playerRepository: PlayerRepository
+    private val interactor: IMediaPlayerInteractor
     ) {
     val mainThreadHandler = Handler(Looper.getMainLooper())
     companion object {
@@ -22,7 +18,7 @@ class PlayerPresentor(
     }
     fun preparePlayer() {
         view.getData()
-        playerRepository.preparePlayer(
+        interactor.preparePlayer(
         onPrepared = { ->
             view.btPlayAllowed()
             mainThreadHandler?.removeCallbacksAndMessages(null)
@@ -33,11 +29,11 @@ class PlayerPresentor(
         })
     }
     fun startPlayer(){
-        playerRepository.startPlayer()
+        interactor.startPlayer()
         view.btPauseSetImage()
         mainThreadHandler.postDelayed(object : Runnable {
             override fun run() {
-                val elapsedTime = playerRepository.getCurrentPosition()
+                val elapsedTime = interactor.getCurrentPosition()
                 val remainingTime = view.getDuration() - elapsedTime
                 if(remainingTime > 0){
                     view.setCurrentTime()
@@ -49,12 +45,12 @@ class PlayerPresentor(
         },DELAY)
     }
     fun pausePlayer() {
-        playerRepository.pausePlayer()
+        interactor.pausePlayer()
         view.btPlaySetImage()
         mainThreadHandler?.removeCallbacksAndMessages(null)
     }
     fun onBtPlayClicked(){
-        when (playerRepository.getPlayerState()) {
+        when (interactor.getPlayerState()) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -68,7 +64,7 @@ class PlayerPresentor(
         }
     }
     fun destroyPlayer(){
-        playerRepository.destroyPlayer()
+        interactor.destroyPlayer()
         mainThreadHandler?.removeCallbacksAndMessages(null)
     }
     fun goBack(){

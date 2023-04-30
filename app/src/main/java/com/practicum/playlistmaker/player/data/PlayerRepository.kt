@@ -1,12 +1,13 @@
 package com.practicum.playlistmaker.player.data
 
 import android.media.MediaPlayer
+import com.practicum.playlistmaker.player.domain.IMediaPlayerRepository
 import com.practicum.playlistmaker.player.domain.PlayerState
 
-class PlayerRepository(private val url:String) {
+class PlayerRepository(private val url:String) : IMediaPlayerRepository{
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_PREPARED
-    fun preparePlayer(onPrepared: () -> Unit,onCompletion: () -> Unit) {
+    override fun preparePlayer(onPrepared: () -> Unit,onCompletion: () -> Unit) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -18,22 +19,21 @@ class PlayerRepository(private val url:String) {
             playerState = PlayerState.STATE_PREPARED
         }
     }
-    fun startPlayer(){
+    override fun startPlayer(){
         mediaPlayer.start()
         playerState = PlayerState.STATE_PLAYING
     }
-    fun pausePlayer() {
+    override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
     }
-    fun destroyPlayer(){
+    override fun destroyPlayer(){
         mediaPlayer.release()
     }
-    fun getCurrentPosition(): Int {
+    override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
     }
-    @JvmName("getPlayerState1")
-    fun getPlayerState() : PlayerState{
+    override fun getPlayerState() : PlayerState{
         return playerState
     }
 }
