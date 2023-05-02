@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.search
 
 import android.content.Context
 import android.content.Intent
@@ -9,23 +9,19 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.practicum.playlistmaker.*
 import com.practicum.playlistmaker.player.MediaActivity
 import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.data.SearchRepository
 import com.practicum.playlistmaker.search.domain.SearchInteractor
 import com.practicum.playlistmaker.search.presentation.SearchPresenter
 import com.practicum.playlistmaker.search.presentation.SearchScreenView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-enum class SearchStatus { SUCCESS, CONNECTION_ERROR, EMPTY_SEARCH,START }
 class SearchActivity : AppCompatActivity(),SearchScreenView {
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
@@ -167,7 +163,7 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
         historySearchList.adapter = trackHistoryAdapter
     }
 
-    private fun initTrackAdapter(recyclerView: RecyclerView) : TrackAdapter{
+    private fun initTrackAdapter(recyclerView: RecyclerView) : TrackAdapter {
         val trackAdapter = TrackAdapter {
             if (clickDebounce()) {
                 addTrackToHistory(it)
@@ -179,7 +175,7 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
         return trackAdapter
     }
 
-    private fun addToMedia(track:Track){
+    private fun addToMedia(track: Track){
         val intent = Intent(this, MediaActivity::class.java).apply{
             putExtra(MEDIA_KEY, Gson().toJson(track))
         }

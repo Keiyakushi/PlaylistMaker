@@ -1,11 +1,9 @@
-package com.practicum.playlistmaker.player.presenter
+package com.practicum.playlistmaker.player.presentation
 
 import android.os.Handler
 import android.os.Looper
-import com.practicum.playlistmaker.player.data.PlayerRepository
 import com.practicum.playlistmaker.player.domain.IMediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
-import com.practicum.playlistmaker.search.domain.SearchInteractor
 
 
 class PlayerPresentor(

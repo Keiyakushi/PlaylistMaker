@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.presenter
+package com.practicum.playlistmaker.player.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson

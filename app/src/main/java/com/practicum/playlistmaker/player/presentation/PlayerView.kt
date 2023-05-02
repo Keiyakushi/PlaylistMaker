@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.presenter
+package com.practicum.playlistmaker.player.presentation
 
 interface PlayerView {
  fun btPlayAllowed()

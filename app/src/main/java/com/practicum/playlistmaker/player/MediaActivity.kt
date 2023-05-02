@@ -14,9 +14,9 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.Track
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.data.PlayerRepository
-import com.practicum.playlistmaker.player.presenter.PlayerPresentor
-import com.practicum.playlistmaker.player.presenter.PlayerView
-import com.practicum.playlistmaker.player.presenter.Router
+import com.practicum.playlistmaker.player.presentation.PlayerPresentor
+import com.practicum.playlistmaker.player.presentation.PlayerView
+import com.practicum.playlistmaker.player.presentation.Router
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,7 +27,6 @@ class MediaActivity : AppCompatActivity(),PlayerView {
     lateinit var bt_play: ImageButton
     lateinit var timing: TextView
     lateinit var presentor: PlayerPresentor
-    lateinit var mediaPlayerInteractor: MediaPlayerInteractor
     lateinit var playerRepository: PlayerRepository
     lateinit var track_name : TextView
     lateinit var artist_name : TextView
@@ -113,7 +112,7 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         timing.text = SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
-        ).format(playerRepository.getCurrentPosition())
+        ).format(interactor.getCurrentPosition())
     }
 
     override fun getData() {
