@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.application.App
+import com.practicum.playlistmaker.player.data.PlayerRepository
+import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.search.activity.SearchActivity
 import com.practicum.playlistmaker.search.data.*
 import com.practicum.playlistmaker.search.domain.ISearchInteractor

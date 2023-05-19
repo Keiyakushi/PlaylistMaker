@@ -8,9 +8,6 @@ import com.practicum.playlistmaker.player.activity.MediaActivity
 import com.practicum.playlistmaker.search.activity.SearchActivity
 
 class Router(private val activity: AppCompatActivity) {
-    fun getUrl() : Track {
-        return Gson().fromJson((activity.intent.getStringExtra(MediaActivity.MEDIA_KEY)), Track::class.java)
-    }
     fun addToMedia(track: Track){
         val intent = Intent(activity, MediaActivity::class.java).apply{
             putExtra(SearchActivity.MEDIA_KEY, Gson().toJson(track))

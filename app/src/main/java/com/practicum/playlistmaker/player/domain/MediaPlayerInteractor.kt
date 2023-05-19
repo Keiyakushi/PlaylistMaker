@@ -22,6 +22,10 @@ class MediaPlayerInteractor(
         repository.destroyPlayer()
     }
 
+    override fun getDuration(): Int {
+        return repository.getDuration()
+    }
+
     override fun getCurrentPosition(): Int {
         return repository.getCurrentPosition()
     }
@@ -29,4 +33,5 @@ class MediaPlayerInteractor(
     override fun getPlayerState(): PlayerState {
         return repository.getPlayerState()
     }
+
 }

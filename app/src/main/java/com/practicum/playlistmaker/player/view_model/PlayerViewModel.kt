@@ -13,20 +13,25 @@ class PlayerViewModel(
     private val mainThreadHandler : Handler
 ) : ViewModel(){
     companion object {
-        private const val DELAY = 1000L
+        private const val DELAY = 800L
     }
-    private val duration : Int = 30000
     private val _state = MutableLiveData<PlayerStatus>()
     val state: LiveData<PlayerStatus> = _state
+    private val _SetTime = MutableLiveData <Int>()
+    val SetTime : LiveData<Int> = _SetTime
+
+
+    init {
+            preparePlayer()
+    }
 
     override fun onCleared() {
         super.onCleared()
-        interactor.pausePlayer()
         interactor.destroyPlayer()
-        mainThreadHandler?.removeCallbacksAndMessages(null)
+        mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
-    fun preparePlayer() {
+    private fun preparePlayer() {
         interactor.preparePlayer(
             onPrepared = { ->
                 _state.postValue(PlayerStatus.OnPrepare)
@@ -37,21 +42,22 @@ class PlayerViewModel(
             })
     }
 
-    fun startPlayer(){
+    private fun startPlayer(){
+
         interactor.startPlayer()
         _state.postValue(PlayerStatus.SetPauseImage)
-        mainThreadHandler.postDelayed(object : Runnable {
+        mainThreadHandler.post(object : Runnable {
             override fun run() {
                 val elapsedTime = interactor.getCurrentPosition()
-                val remainingTime = duration - elapsedTime
+                val remainingTime = interactor.getDuration() - elapsedTime
                 if(remainingTime > 0){
-                    _state.postValue(PlayerStatus.SetCurrentTime)
+                    _SetTime.postValue(interactor.getCurrentPosition())
                     mainThreadHandler?.postDelayed(this, DELAY)
                 } else {
                     _state.postValue(PlayerStatus.SetTimeZero)
                 }
             }
-        }, DELAY)
+        })
     }
     fun pausePlayer() {
         interactor.pausePlayer()
@@ -71,10 +77,6 @@ class PlayerViewModel(
                 startPlayer()
             }
         }
-    }
-    fun destroyPlayer(){
-        interactor.destroyPlayer()
-        mainThreadHandler?.removeCallbacksAndMessages(null)
     }
 
 }

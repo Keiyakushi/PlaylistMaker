@@ -13,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivityMediaBinding
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.data.PlayerRepository
 import com.practicum.playlistmaker.player.data.PlayerStatus
+import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.view_model.PlayerView
 import com.practicum.playlistmaker.player.view_model.PlayerViewModel
 import com.practicum.playlistmaker.player.view_model.PlayerViewModelFactory
@@ -31,7 +33,6 @@ class MediaActivity : AppCompatActivity(),PlayerView {
     private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
     lateinit var playerRepository: PlayerRepository
     lateinit var interactor : MediaPlayerInteractor
-    var url : String = ""
     val router = Router(this)
     private lateinit var viewModel : PlayerViewModel
     val mainThreadHandler = Handler(Looper.getMainLooper())
@@ -41,15 +42,10 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         viewModel.pausePlayer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.destroyPlayer()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        playerRepository = PlayerRepository(router.getUrl().previewUrl)
+        playerRepository = PlayerRepository(router.getTrack().previewUrl)
         interactor = MediaPlayerInteractor(playerRepository)
         viewModel = ViewModelProvider(this,PlayerViewModelFactory(
             interactor,mainThreadHandler)
@@ -61,14 +57,19 @@ class MediaActivity : AppCompatActivity(),PlayerView {
                     setTimeZero()
                 }
                 PlayerStatus.OnPrepare -> btPlayAllowed()
-                PlayerStatus.SetCurrentTime -> setCurrentTime()
                 PlayerStatus.SetPauseImage -> btPauseSetImage()
-                PlayerStatus.SetPlayImage -> btPlaySetImage()
+                PlayerStatus.SetPlayImage -> {
+                    btPlaySetImage()
+                    btPlayAllowed()
+                }
                 PlayerStatus.SetTimeZero -> setTimeZero()
             }
         }
-        viewModel.preparePlayer()
         getData()
+        viewModel.SetTime.observe(this){
+            setCurrentTime(it)
+        }
+
         binding.btPlay.setOnClickListener {
             viewModel.onBtPlayClicked()
         }
@@ -76,7 +77,6 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         binding.backIconMedia.setOnClickListener{
             finish()
         }
-
     }
     override fun btPlayAllowed() {
         binding.btPlay.isEnabled = true
@@ -90,11 +90,11 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         binding.timing.text = "00:00"
     }
 
-    override fun setCurrentTime() {
+    fun setCurrentTime(time : Int) {
         binding.timing.text = SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
-        ).format(interactor.getCurrentPosition())
+        ).format(time)
     }
 
     override fun getData() {
@@ -112,7 +112,7 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         binding.yearScore.text = track.releaseDate?.substring(0,4)
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
-        url = track.previewUrl
+        binding.btPlay.isEnabled = false
     }
 
     override fun goBack() {

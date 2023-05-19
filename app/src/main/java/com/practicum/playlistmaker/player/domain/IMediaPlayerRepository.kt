@@ -5,6 +5,7 @@ interface IMediaPlayerRepository {
     fun startPlayer()
     fun pausePlayer()
     fun destroyPlayer()
+    fun getDuration() : Int
     fun getCurrentPosition(): Int
     fun getPlayerState() : PlayerState
 }

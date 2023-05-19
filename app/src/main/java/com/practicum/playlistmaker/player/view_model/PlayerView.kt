@@ -6,6 +6,6 @@ interface PlayerView {
  fun goBack()
  fun btPauseSetImage()
  fun setTimeZero()
- fun setCurrentTime()
+
  fun getData()
 }
