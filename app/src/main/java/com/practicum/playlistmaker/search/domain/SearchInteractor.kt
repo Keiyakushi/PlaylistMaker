@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.domain
 
-import com.practicum.playlistmaker.Track
+import com.practicum.playlistmaker.search.data.Track
 
 class SearchInteractor(
     private val repository: ISearchRepository
@@ -8,4 +8,5 @@ class SearchInteractor(
    override fun loadTracks(query:String, onSuccess : (ArrayList<Track>) -> Unit, onError : () -> Unit){
         repository.loadTracks(query,onSuccess,onError)
     }
+
 }
