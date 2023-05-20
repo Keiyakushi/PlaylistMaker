@@ -13,7 +13,7 @@ class PlayerViewModel(
     private val mainThreadHandler : Handler
 ) : ViewModel(){
     companion object {
-        private const val DELAY = 800L
+        private const val DELAY = 1000L
     }
     private val _state = MutableLiveData<PlayerStatus>()
     val state: LiveData<PlayerStatus> = _state
@@ -22,7 +22,7 @@ class PlayerViewModel(
 
 
     init {
-            preparePlayer()
+        preparePlayer()
     }
 
     override fun onCleared() {
@@ -38,6 +38,7 @@ class PlayerViewModel(
                 mainThreadHandler?.removeCallbacksAndMessages(null)
             },
             onCompletion = { ->
+                preparePlayer()
                 _state.postValue(PlayerStatus.OnComplete)
             })
     }
@@ -59,11 +60,13 @@ class PlayerViewModel(
             }
         })
     }
+
     fun pausePlayer() {
         interactor.pausePlayer()
         _state.postValue(PlayerStatus.SetPlayImage)
         mainThreadHandler?.removeCallbacksAndMessages(null)
     }
+
     fun onBtPlayClicked(){
         when (interactor.getPlayerState()) {
             PlayerState.STATE_PLAYING -> {

@@ -8,6 +8,7 @@ class PlayerRepository(private val url:String) : IMediaPlayerRepository{
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     override fun preparePlayer(onPrepared: () -> Unit,onCompletion: () -> Unit) {
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {

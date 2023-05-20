@@ -4,21 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivityMediaBinding
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.data.PlayerRepository
 import com.practicum.playlistmaker.player.data.PlayerStatus
-import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.view_model.PlayerView
 import com.practicum.playlistmaker.player.view_model.PlayerViewModel
 import com.practicum.playlistmaker.player.view_model.PlayerViewModelFactory
@@ -62,7 +55,9 @@ class MediaActivity : AppCompatActivity(),PlayerView {
                     btPlaySetImage()
                     btPlayAllowed()
                 }
-                PlayerStatus.SetTimeZero -> setTimeZero()
+                PlayerStatus.SetTimeZero -> {
+                    setTimeZero()
+                }
             }
         }
         getData()
@@ -80,6 +75,9 @@ class MediaActivity : AppCompatActivity(),PlayerView {
     }
     override fun btPlayAllowed() {
         binding.btPlay.isEnabled = true
+    }
+    private fun btPlayBan(){
+        binding.btPlay.isEnabled = false
     }
 
     override fun btPlaySetImage() {
