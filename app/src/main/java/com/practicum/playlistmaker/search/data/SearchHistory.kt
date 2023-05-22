@@ -11,10 +11,10 @@ const val HISTORY_KEY = "HISTORY_KEY"
 
 class SearchHistory(val sharedPreferences: SharedPreferences) {
 
-    fun saveHistory(historyList : ArrayList<Track>){
+    fun saveHistory(historyList: ArrayList<Track>) {
         val json = Gson().toJson(historyList)
         sharedPreferences.edit()
-            .putString(HISTORY_KEY,json)
+            .putString(HISTORY_KEY, json)
             .apply()
     }
 
@@ -22,7 +22,8 @@ class SearchHistory(val sharedPreferences: SharedPreferences) {
         val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<Track>::class.java)
     }
-    fun provideApi() : iTunesApi {
+
+    fun provideApi(): iTunesApi {
         return Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")
             .addConverterFactory(GsonConverterFactory.create())

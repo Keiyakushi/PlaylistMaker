@@ -9,6 +9,7 @@ class App : Application() {
     companion object {
         const val PREFERENCES = "app_preferences"
     }
+
     var darkTheme = false
 
     override fun onCreate() {

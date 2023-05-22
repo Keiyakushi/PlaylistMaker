@@ -24,22 +24,28 @@ object Creator {
     fun provideRouterInteractor(context: Context): IRouterInteractor {
         return RouterInteractor(getRouter(context))
     }
-    fun provideSearchHistory(context: Context) : SearchHistory{
+
+    fun provideSearchHistory(context: Context): SearchHistory {
         return SearchHistory(context.getSharedPreferences
             (App.PREFERENCES, AppCompatActivity.MODE_PRIVATE))
     }
-    fun provideSearchRepository(context: Context) : SearchRepository{
+
+    fun provideSearchRepository(context: Context): SearchRepository {
         return SearchRepository(provideSearchHistory(context).provideApi())
     }
+
     private fun getSettingsRepository(context: Context): ISettingsRepository {
         return SettingsRepository(getSettingsStorage(context))
     }
+
     private fun getRouter(context: Context): ISettingsRouter {
         return SettingsRouter(context)
     }
+
     private fun getSettingsStorage(context: Context): ISettingsStorage {
         return SharedPreSettings(getSharedPreferences(context))
     }
+
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(App.PREFERENCES, AppCompatActivity.MODE_PRIVATE)
     }

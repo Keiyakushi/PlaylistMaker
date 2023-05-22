@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.settings.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.settings.view_model.SettingsViewModel
@@ -12,10 +13,10 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val viewModel = ViewModelProvider(
-                this, SettingsViewModel.getViewModelFactory()
-            )[SettingsViewModel::class.java]
+            this, SettingsViewModel.getViewModelFactory()
+        )[SettingsViewModel::class.java]
 
-        viewModel.themeSwitcherStateLiveData.observe(this){isChecked ->
+        viewModel.themeSwitcherStateLiveData.observe(this) { isChecked ->
             binding.switchThemeMode.isChecked = isChecked
         }
         binding.switchThemeMode.setOnCheckedChangeListener { _, isChecked ->
@@ -24,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.backIcon.setOnClickListener {
             finish()
         }
-        binding.settingsShare.setOnClickListener{
+        binding.settingsShare.setOnClickListener {
             viewModel.onShareAppClicked()
         }
         binding.settingsSuport.setOnClickListener {

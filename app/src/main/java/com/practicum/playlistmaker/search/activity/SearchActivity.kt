@@ -25,12 +25,13 @@ import com.practicum.playlistmaker.search.view_model.SearchScreenView
 import com.practicum.playlistmaker.search.view_model.SearchViewModel
 import com.practicum.playlistmaker.search.view_model.SearchViewModelFactory
 
-class SearchActivity : AppCompatActivity(),SearchScreenView {
+class SearchActivity : AppCompatActivity(), SearchScreenView {
     companion object {
         const val MEDIA_KEY = "MEDIA_KEY"
         const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
         const val CLICK_DEBOUNCE_DELAY_MS = 1000L
     }
+
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
     private val router = Router(this)
@@ -39,8 +40,8 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
     private lateinit var searchHistory: SearchHistory
     var savedText: String = ""
     private lateinit var interactor: SearchInteractor
-    private lateinit var viewModel : SearchViewModel
-    private lateinit var trackAdapter : TrackAdapter
+    private lateinit var viewModel: SearchViewModel
+    private lateinit var trackAdapter: TrackAdapter
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
     override fun onStop() {
         super.onStop()
@@ -61,17 +62,17 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
         trackAdapter = initTrackAdapter(binding.recyclerView)
         initTrackHistoryAdapter()
         viewModel = ViewModelProvider(this, SearchViewModelFactory
-            (interactor,historyList))[SearchViewModel::class.java]
+            (interactor, historyList))[SearchViewModel::class.java]
 
-        viewModel.ClearHistoryListLiveData.observe(this){historyList ->
+        viewModel.ClearHistoryListLiveData.observe(this) { historyList ->
             if (historyList.isEmpty()) {
                 hideHistory()
-            }else {
+            } else {
                 showHistory()
             }
         }
-        viewModel.StartShowTracks.observe(this){
-            when(it){
+        viewModel.StartShowTracks.observe(this) {
+            when (it) {
                 SearchState.PrepareShowTracks -> StartShowTracks()
                 SearchState.SearchTextClear -> {
                     hideKeyboard()
@@ -82,23 +83,21 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
                 SearchState.ShowTracksError -> showTracksError()
             }
         }
-        viewModel.TracksListLiveData.observe(this){
+        viewModel.TracksListLiveData.observe(this) {
             showTracks(it)
         }
-        viewModel.VisbilityHistory.observe(this){
-            if(it){
+        viewModel.VisbilityHistory.observe(this) {
+            if (it) {
                 showHistory()
-            } else{
+            } else {
                 hideHistory()
             }
         }
 
-
-
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
-            viewModel.onFocusSearchChanged(hasFocus,binding.searchEditText.text.toString())
+            viewModel.onFocusSearchChanged(hasFocus, binding.searchEditText.text.toString())
         }
-        binding.btHistoryClear.setOnClickListener{
+        binding.btHistoryClear.setOnClickListener {
             viewModel.clearHistory()
         }
 
@@ -108,11 +107,11 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
         binding.clearText.setOnClickListener {
             viewModel.SearchTextClearClicked()
         }
-        binding.btUpdate.setOnClickListener(){
+        binding.btUpdate.setOnClickListener {
             viewModel.loadTracks(savedText)
         }
 
-        val searchRunnable = Runnable {viewModel.loadTracks(savedText)}
+        val searchRunnable = Runnable { viewModel.loadTracks(savedText) }
 
         fun searchDebounce() {
             handler.removeCallbacks(searchRunnable)
@@ -126,10 +125,10 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 binding.clearText.visibility =
                     if (p0.isNullOrEmpty()) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
                 savedText = p0.toString()
                 searchDebounce()
                 viewModel.hasTextOnWatcher(savedText)
@@ -157,7 +156,7 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initTrackAdapter(recyclerView: RecyclerView) : TrackAdapter {
+    private fun initTrackAdapter(recyclerView: RecyclerView): TrackAdapter {
         val trackAdapter = TrackAdapter {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
@@ -169,9 +168,10 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
         recyclerView.adapter = trackAdapter
         return trackAdapter
     }
+
     private fun addTrackToHistory(track: Track) = viewModel.addTrackToHistory(track)
 
-    fun clickDebounce() : Boolean {
+    fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -182,7 +182,7 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
 
     override fun clearHistory() {
         if (historyList.isEmpty())
-        binding.historyLayout.visibility = View.GONE
+            binding.historyLayout.visibility = View.GONE
     }
 
     override fun showHistory() {
@@ -231,7 +231,7 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
     override fun hideKeyboard() {
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        inputMethodManager?.hideSoftInputFromWindow( binding.clearText.windowToken, 0)
+        inputMethodManager?.hideSoftInputFromWindow(binding.clearText.windowToken, 0)
     }
 
     override fun hideTracks() {
@@ -257,7 +257,8 @@ class SearchActivity : AppCompatActivity(),SearchScreenView {
 
     override fun historyListRemove(track: Track) {
         binding.historySearchList.adapter?.notifyItemRemoved(historyList.indexOf(track))
-        binding.historySearchList.adapter?.notifyItemRangeChanged(historyList.indexOf(track), historyList.size)
+        binding.historySearchList.adapter?.notifyItemRangeChanged(historyList.indexOf(track),
+            historyList.size)
     }
 
     override fun historyListRemoveAt() {

@@ -14,8 +14,8 @@ import com.practicum.playlistmaker.search.data.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TrackViewHolder(private val binding: TrackListViewBinding) : RecyclerView.ViewHolder(binding.root)
- {
+class TrackViewHolder(private val binding: TrackListViewBinding) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind(model: Track) {
         binding.trackName.text = model.trackName
         binding.artistName.text = model.artistName

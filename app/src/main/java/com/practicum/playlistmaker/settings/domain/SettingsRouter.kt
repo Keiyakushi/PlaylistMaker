@@ -5,16 +5,17 @@ import android.content.Intent
 import android.net.Uri
 import com.practicum.playlistmaker.R
 
-class SettingsRouter(private val context: Context) : ISettingsRouter{
+class SettingsRouter(private val context: Context) : ISettingsRouter {
     private val extraMail = context.getText(R.string.mail)
     private val subject = context.getText(R.string.subject)
     private val message = context.getText(R.string.message)
+    private val share = context.getText(R.string.share)
 
     override fun shareLink(shareUrl: String) {
-        val intent = Intent(Intent.ACTION_SENDTO).apply{
+        val intent = Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_TEXT, shareUrl)
             type = "text/plain"
-        }
+        }, share)
         context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 

@@ -9,16 +9,17 @@ import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
 
 class PlayerViewModel(
-    private val interactor : MediaPlayerInteractor,
-    private val mainThreadHandler : Handler
-) : ViewModel(){
+    private val interactor: MediaPlayerInteractor,
+    private val mainThreadHandler: Handler,
+) : ViewModel() {
     companion object {
         private const val DELAY = 1000L
     }
+
     private val _state = MutableLiveData<PlayerStatus>()
     val state: LiveData<PlayerStatus> = _state
-    private val _SetTime = MutableLiveData <Int>()
-    val SetTime : LiveData<Int> = _SetTime
+    private val _SetTime = MutableLiveData<Int>()
+    val SetTime: LiveData<Int> = _SetTime
 
 
     init {
@@ -35,7 +36,7 @@ class PlayerViewModel(
         interactor.preparePlayer(
             onPrepared = { ->
                 _state.postValue(PlayerStatus.OnPrepare)
-                mainThreadHandler?.removeCallbacksAndMessages(null)
+                mainThreadHandler.removeCallbacksAndMessages(null)
             },
             onCompletion = { ->
                 preparePlayer()
@@ -43,7 +44,7 @@ class PlayerViewModel(
             })
     }
 
-    private fun startPlayer(){
+    private fun startPlayer() {
 
         interactor.startPlayer()
         _state.postValue(PlayerStatus.SetPauseImage)
@@ -51,9 +52,9 @@ class PlayerViewModel(
             override fun run() {
                 val elapsedTime = interactor.getCurrentPosition()
                 val remainingTime = interactor.getDuration() - elapsedTime
-                if(remainingTime > 0){
+                if (remainingTime > 0) {
                     _SetTime.postValue(interactor.getCurrentPosition())
-                    mainThreadHandler?.postDelayed(this, DELAY)
+                    mainThreadHandler.postDelayed(this, DELAY)
                 } else {
                     _state.postValue(PlayerStatus.SetTimeZero)
                 }
@@ -64,10 +65,10 @@ class PlayerViewModel(
     fun pausePlayer() {
         interactor.pausePlayer()
         _state.postValue(PlayerStatus.SetPlayImage)
-        mainThreadHandler?.removeCallbacksAndMessages(null)
+        mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
-    fun onBtPlayClicked(){
+    fun onBtPlayClicked() {
         when (interactor.getPlayerState()) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()

@@ -19,15 +19,16 @@ import com.practicum.playlistmaker.router.Router
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MediaActivity : AppCompatActivity(),PlayerView {
-    companion object{
+class MediaActivity : AppCompatActivity(), PlayerView {
+    companion object {
         const val MEDIA_KEY = "MEDIA_KEY"
     }
+
     private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
     lateinit var playerRepository: PlayerRepository
-    lateinit var interactor : MediaPlayerInteractor
+    lateinit var interactor: MediaPlayerInteractor
     val router = Router(this)
-    private lateinit var viewModel : PlayerViewModel
+    private lateinit var viewModel: PlayerViewModel
     val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun onPause() {
@@ -40,11 +41,11 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         setContentView(binding.root)
         playerRepository = PlayerRepository(router.getTrack().previewUrl)
         interactor = MediaPlayerInteractor(playerRepository)
-        viewModel = ViewModelProvider(this,PlayerViewModelFactory(
-            interactor,mainThreadHandler)
+        viewModel = ViewModelProvider(this, PlayerViewModelFactory(
+            interactor, mainThreadHandler)
         )[PlayerViewModel::class.java]
-        viewModel.state.observe(this){ state ->
-            when(state){
+        viewModel.state.observe(this) { state ->
+            when (state) {
                 PlayerStatus.OnComplete -> {
                     btPlaySetImage()
                     setTimeZero()
@@ -61,7 +62,7 @@ class MediaActivity : AppCompatActivity(),PlayerView {
             }
         }
         getData()
-        viewModel.SetTime.observe(this){
+        viewModel.SetTime.observe(this) {
             setCurrentTime(it)
         }
 
@@ -69,14 +70,16 @@ class MediaActivity : AppCompatActivity(),PlayerView {
             viewModel.onBtPlayClicked()
         }
 
-        binding.backIconMedia.setOnClickListener{
+        binding.backIconMedia.setOnClickListener {
             finish()
         }
     }
+
     override fun btPlayAllowed() {
         binding.btPlay.isEnabled = true
     }
-    private fun btPlayBan(){
+
+    private fun btPlayBan() {
         binding.btPlay.isEnabled = false
     }
 
@@ -84,11 +87,11 @@ class MediaActivity : AppCompatActivity(),PlayerView {
         binding.btPlay.setImageResource(R.drawable.ic_bt_play)
     }
 
-    override fun setTimeZero(){
+    override fun setTimeZero() {
         binding.timing.text = "00:00"
     }
 
-    fun setCurrentTime(time : Int) {
+    fun setCurrentTime(time: Int) {
         binding.timing.text = SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
@@ -105,9 +108,10 @@ class MediaActivity : AppCompatActivity(),PlayerView {
             .into(binding.coverMedia)
         binding.trackNameMedia.text = track.trackName
         binding.artistNameMedia.text = track.artistName
-        binding.timeDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLong())
+        binding.timeDuration.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLong())
         binding.albumName.text = track.collectionName
-        binding.yearScore.text = track.releaseDate?.substring(0,4)
+        binding.yearScore.text = track.releaseDate.substring(0, 4)
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
         binding.btPlay.isEnabled = false

@@ -14,14 +14,14 @@ import com.practicum.playlistmaker.settings.domain.ISettingsInteractor
 import com.practicum.playlistmaker.settings.data.ThemeSettings
 import com.practicum.playlistmaker.settings.domain.IRouterInteractor
 
-class SettingsViewModel (
-    private val interactor : ISettingsInteractor,
-    private val router : IRouterInteractor,
-    private val application: App
-    ) : AndroidViewModel(application){
+class SettingsViewModel(
+    private val interactor: ISettingsInteractor,
+    private val router: IRouterInteractor,
+    private val application: App,
+) : AndroidViewModel(application) {
     private var darkTheme = false
     private val _themeSwitcherStateLiveData = MutableLiveData(darkTheme)
-    val themeSwitcherStateLiveData : LiveData<Boolean> = _themeSwitcherStateLiveData
+    val themeSwitcherStateLiveData: LiveData<Boolean> = _themeSwitcherStateLiveData
 
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {

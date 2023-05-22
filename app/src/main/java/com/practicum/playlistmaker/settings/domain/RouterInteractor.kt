@@ -1,8 +1,9 @@
 package com.practicum.playlistmaker.settings.domain
 
-class RouterInteractor (
-    private val router: ISettingsRouter
-        ) : IRouterInteractor{
+
+class RouterInteractor(
+    private val router: ISettingsRouter,
+) : IRouterInteractor {
     override fun shareApp() {
         router.shareLink(getShareAppLink())
     }
@@ -16,7 +17,7 @@ class RouterInteractor (
     }
 
     private fun getShareAppLink(): String {
-        return "https://practicum.yandex.ru/android-developer/"
+        return ("https://practicum.yandex.ru/android-developer/")
     }
 
     private fun getTermsLink(): String {

@@ -7,11 +7,11 @@ import com.practicum.playlistmaker.search.domain.SearchInteractor
 
 class SearchViewModelFactory(
     private val interactor: SearchInteractor,
-    private val historyList : ArrayList<Track>
+    private val historyList: ArrayList<Track>,
 ) : ViewModelProvider.Factory {
 
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return SearchViewModel(interactor,historyList) as T
-        }
+        return SearchViewModel(interactor, historyList) as T
+    }
 }

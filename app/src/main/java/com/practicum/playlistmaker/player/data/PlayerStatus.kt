@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.player.data
 
-sealed class PlayerStatus(){
-    object OnPrepare: PlayerStatus()
+sealed class PlayerStatus {
+    object OnPrepare : PlayerStatus()
     object OnComplete : PlayerStatus()
     object SetPauseImage : PlayerStatus()
 

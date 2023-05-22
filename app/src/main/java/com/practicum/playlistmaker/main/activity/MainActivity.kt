@@ -15,14 +15,14 @@ import com.practicum.playlistmaker.search.activity.SearchActivity
 import com.practicum.playlistmaker.settings.activity.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel : MainViewModel
+    private lateinit var viewModel: MainViewModel
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this,MainViewModelFactory())[MainViewModel::class.java]
-        viewModel.contentStateLiveData.observe(this){
-            when(it){
+        viewModel = ViewModelProvider(this, MainViewModelFactory())[MainViewModel::class.java]
+        viewModel.contentStateLiveData.observe(this) {
+            when (it) {
                 MainStates.Library -> {
                     val settingsIntent = Intent(this, MediaStore::class.java)
                     startActivity(settingsIntent)
@@ -37,13 +37,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.search.setOnClickListener{
+        binding.search.setOnClickListener {
             viewModel.onSearchButtonClicked()
         }
-        binding.media.setOnClickListener{
+        binding.media.setOnClickListener {
             viewModel.onLibraryButtonClicked()
         }
-        binding.setting.setOnClickListener{
+        binding.setting.setOnClickListener {
             viewModel.onSettingsButtonClicked()
         }
 

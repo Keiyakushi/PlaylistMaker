@@ -7,7 +7,7 @@ interface SearchScreenView {
     fun showHistory()
     fun hideHistory()
     fun showEmptyResult()
-    fun showTracks(trackList:List<Track>)
+    fun showTracks(trackList: List<Track>)
     fun showTracksError()
     fun StartShowTracks()
     fun clearSearchText()

@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 
 class PlayerViewModelFactory(
-    private val interactor : MediaPlayerInteractor,
-    private val handler: Handler
-) : ViewModelProvider.Factory{
+    private val interactor: MediaPlayerInteractor,
+    private val handler: Handler,
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return PlayerViewModel(interactor,handler) as T
+        return PlayerViewModel(interactor, handler) as T
     }
 }
