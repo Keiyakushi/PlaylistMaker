@@ -51,7 +51,8 @@
             android:background="@drawable/rounded_edittext"
             android:focusable="true"
             android:hint="@string/hint_search"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionDone|flagNoExtractUi"
+
             android:inputType="text"
             android:lines="1"
             android:paddingLeft="35dp"

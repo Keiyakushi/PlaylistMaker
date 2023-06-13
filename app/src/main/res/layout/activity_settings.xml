@@ -57,6 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/switch_theme_mode"
+            app:trackTint="?attr/background_search"
+            app:thumbTint="?attr/background_search"
             android:layout_gravity="end"
             android:gravity="end"
             android:paddingTop="61dp"
