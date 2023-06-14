@@ -2,22 +2,18 @@ package com.practicum.playlistmaker.player.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityMediaBinding
-import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
-import com.practicum.playlistmaker.player.data.PlayerRepository
 import com.practicum.playlistmaker.player.data.PlayerStatus
 import com.practicum.playlistmaker.player.view_model.PlayerView
 import com.practicum.playlistmaker.player.view_model.PlayerViewModel
-import com.practicum.playlistmaker.player.view_model.PlayerViewModelFactory
 import com.practicum.playlistmaker.router.Router
 import java.text.SimpleDateFormat
 import java.util.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class MediaActivity : AppCompatActivity(), PlayerView {
     companion object {
@@ -25,11 +21,9 @@ class MediaActivity : AppCompatActivity(), PlayerView {
     }
 
     private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
-    lateinit var playerRepository: PlayerRepository
-    lateinit var interactor: MediaPlayerInteractor
+
     val router = Router(this)
-    private lateinit var viewModel: PlayerViewModel
-    val mainThreadHandler = Handler(Looper.getMainLooper())
+    private val viewModel: PlayerViewModel by viewModel()
 
     override fun onPause() {
         super.onPause()
@@ -39,11 +33,6 @@ class MediaActivity : AppCompatActivity(), PlayerView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        playerRepository = PlayerRepository(router.getTrack().previewUrl)
-        interactor = MediaPlayerInteractor(playerRepository)
-        viewModel = ViewModelProvider(this, PlayerViewModelFactory(
-            interactor, mainThreadHandler)
-        )[PlayerViewModel::class.java]
         viewModel.state.observe(this) { state ->
             when (state) {
                 PlayerStatus.OnComplete -> {
@@ -67,7 +56,7 @@ class MediaActivity : AppCompatActivity(), PlayerView {
         }
 
         binding.btPlay.setOnClickListener {
-            viewModel.onBtPlayClicked()
+            viewModel.onBtPlayClicked(router.getTrack().previewUrl)
         }
 
         binding.backIconMedia.setOnClickListener {
@@ -77,10 +66,6 @@ class MediaActivity : AppCompatActivity(), PlayerView {
 
     override fun btPlayAllowed() {
         binding.btPlay.isEnabled = true
-    }
-
-    private fun btPlayBan() {
-        binding.btPlay.isEnabled = false
     }
 
     override fun btPlaySetImage() {
@@ -114,7 +99,7 @@ class MediaActivity : AppCompatActivity(), PlayerView {
         binding.yearScore.text = track.releaseDate.substring(0, 4)
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
-        binding.btPlay.isEnabled = false
+        binding.btPlay.isEnabled = true
     }
 
     override fun goBack() {

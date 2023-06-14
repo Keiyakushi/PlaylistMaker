@@ -23,10 +23,4 @@ class SearchHistory(val sharedPreferences: SharedPreferences) {
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 
-    fun provideApi(): iTunesApi {
-        return Retrofit.Builder()
-            .baseUrl("https://itunes.apple.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(iTunesApi::class.java)
-    }
 }

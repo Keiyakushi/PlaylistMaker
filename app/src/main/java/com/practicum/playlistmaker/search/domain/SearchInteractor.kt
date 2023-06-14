@@ -13,4 +13,11 @@ class SearchInteractor(
         repository.loadTracks(query, onSuccess, onError)
     }
 
+    override fun readHistory(): Array<Track> {
+        return repository.readHistory()
+    }
+
+    override fun saveHistory(historyList: ArrayList<Track>) {
+        repository.saveHistory(historyList)
+    }
 }

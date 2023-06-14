@@ -1,10 +1,7 @@
 package com.practicum.playlistmaker.settings.view_model
 
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -17,24 +14,11 @@ import com.practicum.playlistmaker.settings.domain.IRouterInteractor
 class SettingsViewModel(
     private val interactor: ISettingsInteractor,
     private val router: IRouterInteractor,
-    private val application: App,
-) : AndroidViewModel(application) {
+) : ViewModel() {
+
     private var darkTheme = false
     private val _themeSwitcherStateLiveData = MutableLiveData(darkTheme)
     val themeSwitcherStateLiveData: LiveData<Boolean> = _themeSwitcherStateLiveData
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = this[APPLICATION_KEY] as App
-                SettingsViewModel(
-                    Creator.provideSettingsInteractor(application),
-                    Creator.provideRouterInteractor(application),
-                    application,
-                )
-            }
-        }
-    }
 
     init {
         darkTheme = interactor.getThemeSettings().darkTheme
@@ -55,7 +39,7 @@ class SettingsViewModel(
         router.openSupport()
     }
 
-    fun OnUserAgreement() {
+    fun onUserAgreement() {
         router.openTerms()
     }
 

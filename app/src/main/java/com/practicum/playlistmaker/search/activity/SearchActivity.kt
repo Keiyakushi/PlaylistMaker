@@ -10,20 +10,15 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.application.App
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.router.Router
-import com.practicum.playlistmaker.search.data.SearchHistory
-import com.practicum.playlistmaker.search.data.SearchRepository
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
-import com.practicum.playlistmaker.search.domain.SearchInteractor
 import com.practicum.playlistmaker.search.view_model.SearchScreenView
 import com.practicum.playlistmaker.search.view_model.SearchViewModel
-import com.practicum.playlistmaker.search.view_model.SearchViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class SearchActivity : AppCompatActivity(), SearchScreenView {
     companion object {
@@ -37,32 +32,28 @@ class SearchActivity : AppCompatActivity(), SearchScreenView {
     private val router = Router(this)
     var isClickAllowed = true
     val handler = Handler(Looper.getMainLooper())
-    private lateinit var searchHistory: SearchHistory
     var savedText: String = ""
-    private lateinit var interactor: SearchInteractor
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel {
+        parametersOf(historyList)
+    }
     private lateinit var trackAdapter: TrackAdapter
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
+
     override fun onStop() {
         super.onStop()
-        searchHistory.saveHistory(historyList)
+        viewModel.addAllToSaveHistory(historyList)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        searchHistory.saveHistory(historyList)
+        viewModel.addAllToSaveHistory(historyList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        searchHistory = Creator.provideSearchHistory(this)
-        val repository = Creator.provideSearchRepository(this)
-        interactor = SearchInteractor(repository)
         trackAdapter = initTrackAdapter(binding.recyclerView)
         initTrackHistoryAdapter()
-        viewModel = ViewModelProvider(this, SearchViewModelFactory
-            (interactor, historyList))[SearchViewModel::class.java]
 
         viewModel.ClearHistoryListLiveData.observe(this) { historyList ->
             if (historyList.isEmpty()) {
@@ -138,7 +129,7 @@ class SearchActivity : AppCompatActivity(), SearchScreenView {
 
             }
         }
-        historyList.addAll(searchHistory.readHistory())
+        historyList.addAll(viewModel.addAllToHistory())
         binding.searchEditText.addTextChangedListener(textWatcher)
     }
 

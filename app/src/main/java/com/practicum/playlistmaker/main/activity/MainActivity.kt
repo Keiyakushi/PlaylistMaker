@@ -13,14 +13,15 @@ import com.practicum.playlistmaker.main.view_model.MainViewModel
 import com.practicum.playlistmaker.main.view_model.MainViewModelFactory
 import com.practicum.playlistmaker.search.activity.SearchActivity
 import com.practicum.playlistmaker.settings.activity.SettingsActivity
+import com.practicum.playlistmaker.settings.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModel()
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this, MainViewModelFactory())[MainViewModel::class.java]
         viewModel.contentStateLiveData.observe(this) {
             when (it) {
                 MainStates.Library -> {
