@@ -1,8 +1,7 @@
 package com.practicum.playlistmaker.settings.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

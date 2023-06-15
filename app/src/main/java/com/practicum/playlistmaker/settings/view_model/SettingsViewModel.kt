@@ -1,15 +1,12 @@
 package com.practicum.playlistmaker.settings.view_model
 
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.*
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.application.App
-import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.settings.domain.ISettingsInteractor
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.settings.data.ThemeSettings
 import com.practicum.playlistmaker.settings.domain.IRouterInteractor
+import com.practicum.playlistmaker.settings.domain.ISettingsInteractor
 
 class SettingsViewModel(
     private val interactor: ISettingsInteractor,

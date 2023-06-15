@@ -2,21 +2,21 @@ package com.practicum.playlistmaker.search.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.player.data.HandlerR
 import com.practicum.playlistmaker.router.Router
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.view_model.SearchScreenView
 import com.practicum.playlistmaker.search.view_model.SearchViewModel
+import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -29,9 +29,7 @@ class SearchActivity : AppCompatActivity(), SearchScreenView {
 
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
-    private val router = Router(this)
     var isClickAllowed = true
-    val handler = Handler(Looper.getMainLooper())
     var savedText: String = ""
     private val viewModel: SearchViewModel by viewModel {
         parametersOf(historyList)
@@ -105,8 +103,8 @@ class SearchActivity : AppCompatActivity(), SearchScreenView {
         val searchRunnable = Runnable { viewModel.loadTracks(savedText) }
 
         fun searchDebounce() {
-            handler.removeCallbacks(searchRunnable)
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MS)
+            getKoin().get<HandlerR>().get().removeCallbacks(searchRunnable)
+            getKoin().get<HandlerR>().get().postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MS)
         }
 
         val textWatcher = object : TextWatcher {
@@ -139,7 +137,7 @@ class SearchActivity : AppCompatActivity(), SearchScreenView {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
-                router.addToMedia(it)
+                getKoin().get<Router>().addToMedia(it, this)
             }
         }
         trackHistoryAdapter.trackAdapterList = historyList
@@ -152,7 +150,7 @@ class SearchActivity : AppCompatActivity(), SearchScreenView {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
-                router.addToMedia(it)
+                getKoin().get<Router>().addToMedia(it, this)
             }
         }
         trackAdapter.trackAdapterList = trackList
@@ -166,7 +164,8 @@ class SearchActivity : AppCompatActivity(), SearchScreenView {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MS)
+            getKoin().get<HandlerR>().get()
+                .postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MS)
         }
         return current
     }

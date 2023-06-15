@@ -1,12 +1,10 @@
 package com.practicum.playlistmaker.player.view_model
 
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.player.data.HandlerR
 import com.practicum.playlistmaker.player.data.PlayerStatus
-import com.practicum.playlistmaker.player.domain.IMediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
 
@@ -31,8 +29,7 @@ class PlayerViewModel(
     }
 
 
-
-    fun preparePlayer(url:String) {
+    fun preparePlayer(url: String) {
         interactor.preparePlayer(
             onPrepared = { ->
                 _state.postValue(PlayerStatus.OnPrepare)

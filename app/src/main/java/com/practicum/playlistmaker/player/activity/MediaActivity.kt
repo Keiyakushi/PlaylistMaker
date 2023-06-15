@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.player.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
@@ -10,10 +10,11 @@ import com.practicum.playlistmaker.player.data.PlayerStatus
 import com.practicum.playlistmaker.player.view_model.PlayerView
 import com.practicum.playlistmaker.player.view_model.PlayerViewModel
 import com.practicum.playlistmaker.router.Router
+import org.koin.android.ext.android.getKoin
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+
 
 class MediaActivity : AppCompatActivity(), PlayerView {
     companion object {
@@ -22,7 +23,7 @@ class MediaActivity : AppCompatActivity(), PlayerView {
 
     private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
 
-    val router = Router(this)
+
     private val viewModel: PlayerViewModel by viewModel()
 
     override fun onPause() {
@@ -56,7 +57,7 @@ class MediaActivity : AppCompatActivity(), PlayerView {
         }
 
         binding.btPlay.setOnClickListener {
-            viewModel.onBtPlayClicked(router.getTrack().previewUrl)
+            viewModel.onBtPlayClicked(getKoin().get<Router>().getTrack(this).previewUrl)
         }
 
         binding.backIconMedia.setOnClickListener {
@@ -84,7 +85,7 @@ class MediaActivity : AppCompatActivity(), PlayerView {
     }
 
     override fun getData() {
-        var track = router.getTrack()
+        var track = getKoin().get<Router>().getTrack(this)
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder_media)

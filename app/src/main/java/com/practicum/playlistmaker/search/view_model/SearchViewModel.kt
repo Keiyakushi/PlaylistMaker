@@ -10,7 +10,8 @@ import com.practicum.playlistmaker.search.domain.SearchInteractor
 class SearchViewModel(
     private val interactor: SearchInteractor,
     private val historyList: ArrayList<Track>,
-) : ViewModel() {
+
+    ) : ViewModel() {
     private val _ClearHistoryListLiveData = MutableLiveData<List<Track>>()
     val ClearHistoryListLiveData: LiveData<List<Track>> = _ClearHistoryListLiveData
     private val _StartShowTracks = MutableLiveData<SearchState>()
