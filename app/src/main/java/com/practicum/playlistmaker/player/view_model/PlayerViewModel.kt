@@ -1,16 +1,16 @@
 package com.practicum.playlistmaker.player.view_model
 
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.practicum.playlistmaker.player.data.HandlerR
 import com.practicum.playlistmaker.player.data.PlayerStatus
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
 
 class PlayerViewModel(
     private val interactor: MediaPlayerInteractor,
-    private val mainThreadHandler: Handler,
+    private val mainThreadHandler: HandlerR,
 ) : ViewModel() {
     companion object {
         private const val DELAY = 1000L
@@ -22,39 +22,36 @@ class PlayerViewModel(
     val SetTime: LiveData<Int> = _SetTime
 
 
-    init {
-        preparePlayer()
-    }
-
     override fun onCleared() {
         super.onCleared()
         interactor.destroyPlayer()
-        mainThreadHandler.removeCallbacksAndMessages(null)
+        mainThreadHandler.get().removeCallbacksAndMessages(null)
     }
 
-    private fun preparePlayer() {
+
+    fun preparePlayer(url: String) {
         interactor.preparePlayer(
             onPrepared = { ->
                 _state.postValue(PlayerStatus.OnPrepare)
-                mainThreadHandler.removeCallbacksAndMessages(null)
+                mainThreadHandler.get().removeCallbacksAndMessages(null)
             },
             onCompletion = { ->
-                preparePlayer()
+                preparePlayer(url)
                 _state.postValue(PlayerStatus.OnComplete)
-            })
+            }, url)
     }
 
     private fun startPlayer() {
 
         interactor.startPlayer()
         _state.postValue(PlayerStatus.SetPauseImage)
-        mainThreadHandler.post(object : Runnable {
+        mainThreadHandler.get().post(object : Runnable {
             override fun run() {
                 val elapsedTime = interactor.getCurrentPosition()
                 val remainingTime = interactor.getDuration() - elapsedTime
                 if (remainingTime > 0) {
                     _SetTime.postValue(interactor.getCurrentPosition())
-                    mainThreadHandler.postDelayed(this, DELAY)
+                    mainThreadHandler.get().postDelayed(this, DELAY)
                 } else {
                     _state.postValue(PlayerStatus.SetTimeZero)
                 }
@@ -65,10 +62,10 @@ class PlayerViewModel(
     fun pausePlayer() {
         interactor.pausePlayer()
         _state.postValue(PlayerStatus.SetPlayImage)
-        mainThreadHandler.removeCallbacksAndMessages(null)
+        mainThreadHandler.get().removeCallbacksAndMessages(null)
     }
 
-    fun onBtPlayClicked() {
+    fun onBtPlayClicked(url: String) {
         when (interactor.getPlayerState()) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
@@ -77,7 +74,7 @@ class PlayerViewModel(
                 startPlayer()
             }
             PlayerState.STATE_DEFAULT -> {
-                preparePlayer()
+                preparePlayer(url)
                 startPlayer()
             }
         }

@@ -5,7 +5,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SearchRepository(private val api: iTunesApi) : ISearchRepository {
+class SearchRepository(val api: Network, val searchHistory: SearchHistory) : ISearchRepository {
 
     override fun loadTracks(
         query: String,
@@ -13,7 +13,7 @@ class SearchRepository(private val api: iTunesApi) : ISearchRepository {
         onError: () -> Unit,
     ) {
         if (query.isNotEmpty()) {
-            api.search(query).enqueue(object : Callback<TrackResponse> {
+            api.provideApi().search(query).enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>,
@@ -31,4 +31,11 @@ class SearchRepository(private val api: iTunesApi) : ISearchRepository {
         }
     }
 
+    override fun readHistory(): Array<Track> {
+        return searchHistory.readHistory()
+    }
+
+    override fun saveHistory(historyList: ArrayList<Track>) {
+        searchHistory.saveHistory(historyList)
+    }
 }

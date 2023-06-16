@@ -1,20 +1,17 @@
 package com.practicum.playlistmaker.settings.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.DrawableRes
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.settings.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySettingsBinding.inflate(layoutInflater) }
+    private val viewModel: SettingsViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        val viewModel = ViewModelProvider(
-            this, SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
 
         viewModel.themeSwitcherStateLiveData.observe(this) { isChecked ->
             binding.switchThemeMode.isChecked = isChecked
@@ -32,7 +29,7 @@ class SettingsActivity : AppCompatActivity() {
             viewModel.onSupportClicked()
         }
         binding.userAgreement.setOnClickListener {
-            viewModel.OnUserAgreement()
+            viewModel.onUserAgreement()
         }
     }
 }

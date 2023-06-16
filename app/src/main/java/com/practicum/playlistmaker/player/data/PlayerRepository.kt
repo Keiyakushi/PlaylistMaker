@@ -4,10 +4,10 @@ import android.media.MediaPlayer
 import com.practicum.playlistmaker.player.domain.IMediaPlayerRepository
 import com.practicum.playlistmaker.player.domain.PlayerState
 
-class PlayerRepository(private val url: String) : IMediaPlayerRepository {
+class PlayerRepository : IMediaPlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
-    override fun preparePlayer(onPrepared: () -> Unit, onCompletion: () -> Unit) {
+    override fun preparePlayer(onPrepared: () -> Unit, onCompletion: () -> Unit, url: String) {
         mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
@@ -32,7 +32,8 @@ class PlayerRepository(private val url: String) : IMediaPlayerRepository {
     }
 
     override fun destroyPlayer() {
-        mediaPlayer.release()
+        playerState = PlayerState.STATE_DEFAULT
+        mediaPlayer.reset()
     }
 
     override fun getDuration(): Int {

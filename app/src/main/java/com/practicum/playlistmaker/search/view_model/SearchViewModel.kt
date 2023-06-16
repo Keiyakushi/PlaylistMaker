@@ -10,7 +10,8 @@ import com.practicum.playlistmaker.search.domain.SearchInteractor
 class SearchViewModel(
     private val interactor: SearchInteractor,
     private val historyList: ArrayList<Track>,
-) : ViewModel() {
+
+    ) : ViewModel() {
     private val _ClearHistoryListLiveData = MutableLiveData<List<Track>>()
     val ClearHistoryListLiveData: LiveData<List<Track>> = _ClearHistoryListLiveData
     private val _StartShowTracks = MutableLiveData<SearchState>()
@@ -21,12 +22,18 @@ class SearchViewModel(
     val TracksListLiveData: LiveData<List<Track>> = _TracksListLiveData
 
 
+    override fun onCleared() {
+        super.onCleared()
+        interactor.saveHistory(historyList)
+    }
+
     fun SearchTextClearClicked() {
         _StartShowTracks.postValue(SearchState.SearchTextClear)
     }
 
     fun clearHistory() {
         historyList.clear()
+        interactor.saveHistory(historyList)
         _ClearHistoryListLiveData.postValue(historyList)
     }
 
@@ -58,6 +65,14 @@ class SearchViewModel(
 
     fun hasTextOnWatcher(query: String) {
         _VisbilityHistory.postValue(query.isEmpty())
+    }
+
+    fun addAllToHistory(): Array<Track> {
+        return interactor.readHistory()
+    }
+
+    fun addAllToSaveHistory(historyList: ArrayList<Track>) {
+        interactor.saveHistory(this.historyList)
     }
 
     fun addTrackToHistory(track: Track) {
