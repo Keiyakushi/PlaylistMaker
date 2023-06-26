@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
 import com.practicum.playlistmaker.main.model.MainStates
 import com.practicum.playlistmaker.main.view_model.MainViewModel
-import com.practicum.playlistmaker.media.MediaStore
+import com.practicum.playlistmaker.media.activity.MediaStore
 import com.practicum.playlistmaker.search.activity.SearchActivity
 import com.practicum.playlistmaker.settings.activity.SettingsActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel

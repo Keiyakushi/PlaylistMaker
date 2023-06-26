@@ -16,10 +16,20 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import com.google.gson.Gson
+import com.practicum.playlistmaker.search.data.iTunesApi
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 val dataModule = module {
     singleOf(::Network).bind()
+    single<iTunesApi>{
+        Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(iTunesApi::class.java)
+    }
     singleOf(::SearchHistory).bind()
     single {
         androidContext().getSharedPreferences(App.PREFERENCES, AppCompatActivity.MODE_PRIVATE)
