@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:text="@string/empty_playlists"
         android:gravity="center"
-        android:fontFamily="@font/ys_display_regular"
+        android:fontFamily="@font/ys_display_medium"
         android:textColor="?attr/track_text"
         android:textFontWeight="400"
         android:textSize="@dimen/small_text_size"
