@@ -8,7 +8,7 @@ import com.practicum.playlistmaker.databinding.ActivityMediaBinding
 import com.practicum.playlistmaker.databinding.ActivityMediaStoreTabBinding
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 
-class MediaStore : AppCompatActivity() {
+class MediaStoreActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMediaStoreTabBinding.inflate(layoutInflater) }
     private lateinit var tabMediator: TabLayoutMediator
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,9 +18,9 @@ class MediaStore : AppCompatActivity() {
         binding.viewPager.adapter = MediaViewPagerAdapter(supportFragmentManager, lifecycle)
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = getString(R.string.favorite_tracks)
-                else -> tab.text = getString(R.string.playlists)
+            tab.text = when (position) {
+                0 -> getString(R.string.favorite_tracks)
+                else -> getString(R.string.playlists)
             }
         }
         tabMediator.attach()

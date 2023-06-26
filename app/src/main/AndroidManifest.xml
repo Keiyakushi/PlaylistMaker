@@ -25,7 +25,7 @@
             android:name=".settings.activity.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".media.activity.MediaStore"
+            android:name=".media.activity.MediaStoreActivity"
             android:exported="false" />
         <activity
             android:name=".main.activity.MainActivity"
