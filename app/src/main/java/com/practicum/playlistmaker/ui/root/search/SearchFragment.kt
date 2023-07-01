@@ -30,7 +30,6 @@ class SearchFragment : Fragment(), SearchScreenView {
         const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
         const val CLICK_DEBOUNCE_DELAY_MS = 1000L
     }
-
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
     var isClickAllowed = true

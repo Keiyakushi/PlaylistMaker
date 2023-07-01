@@ -14,6 +14,7 @@
         android:name="com.practicum.playlistmaker.ui.root.media.MediaFragment"
         android:label="fragment_media_store_tab"
         tools:layout="@layout/fragment_media_store_tab" />
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.practicum.playlistmaker.ui.root.settings.SettingsFragment"

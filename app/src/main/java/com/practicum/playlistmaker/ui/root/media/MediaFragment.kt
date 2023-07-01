@@ -13,6 +13,7 @@ import com.practicum.playlistmaker.media.activity.MediaViewPagerAdapter
 class MediaFragment : Fragment() {
     private lateinit var binding: FragmentMediaStoreTabBinding
     private lateinit var tabMediator: TabLayoutMediator
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

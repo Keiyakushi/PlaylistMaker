@@ -24,6 +24,7 @@
             android:textFontWeight="500"
             android:textSize="@dimen/medium_text_size"
             android:textStyle="bold" />
+
     </FrameLayout>
 
     <FrameLayout

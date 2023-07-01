@@ -24,6 +24,7 @@
             android:fontFamily="@font/ys_display_medium"
             android:textFontWeight="500"
             />
+
     </FrameLayout>
 
     <FrameLayout
