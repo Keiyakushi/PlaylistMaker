@@ -13,7 +13,7 @@ class SearchRepository(val api: Network, val searchHistory: SearchHistory) : ISe
         onError: () -> Unit,
     ) {
         if (query.isNotEmpty()) {
-            api.api.search(query).enqueue(object : Callback<TrackResponse> {
+            api.provideApi().search(query).enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>,

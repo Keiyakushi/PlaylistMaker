@@ -5,7 +5,7 @@ import com.google.gson.Gson
 
 const val HISTORY_KEY = "HISTORY_KEY"
 
-class SearchHistory(val sharedPreferences: SharedPreferences, val gson: Gson) {
+class SearchHistory(val sharedPreferences: SharedPreferences,val gson : Gson) {
 
     fun saveHistory(historyList: ArrayList<Track>) {
         sharedPreferences.edit()

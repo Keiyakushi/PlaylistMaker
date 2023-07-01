@@ -1,21 +1,17 @@
-package com.practicum.playlistmaker.ui.root.search
+package com.practicum.playlistmaker.search.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.databinding.FragmentSearchBinding
+import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.player.data.HandlerR
 import com.practicum.playlistmaker.router.Router
-import com.practicum.playlistmaker.search.activity.TrackAdapter
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.view_model.SearchScreenView
@@ -24,7 +20,7 @@ import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class SearchFragment : Fragment(), SearchScreenView {
+class SearchActivity : AppCompatActivity(), SearchScreenView {
     companion object {
         const val MEDIA_KEY = "MEDIA_KEY"
         const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
@@ -39,6 +35,7 @@ class SearchFragment : Fragment(), SearchScreenView {
         parametersOf(historyList)
     }
     private lateinit var trackAdapter: TrackAdapter
+    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
 
     override fun onStop() {
         super.onStop()
@@ -50,31 +47,20 @@ class SearchFragment : Fragment(), SearchScreenView {
         viewModel.addAllToSaveHistory(historyList)
     }
 
-    private lateinit var binding: FragmentSearchBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
         trackAdapter = initTrackAdapter(binding.recyclerView)
         initTrackHistoryAdapter()
 
-        viewModel.ClearHistoryListLiveData.observe(viewLifecycleOwner) { historyList ->
+        viewModel.ClearHistoryListLiveData.observe(this) { historyList ->
             if (historyList.isEmpty()) {
                 hideHistory()
             } else {
                 showHistory()
             }
         }
-        viewModel.StartShowTracks.observe(viewLifecycleOwner) {
+        viewModel.StartShowTracks.observe(this) {
             when (it) {
                 SearchState.PrepareShowTracks -> StartShowTracks()
                 SearchState.SearchTextClear -> {
@@ -86,10 +72,10 @@ class SearchFragment : Fragment(), SearchScreenView {
                 SearchState.ShowTracksError -> showTracksError()
             }
         }
-        viewModel.TracksListLiveData.observe(viewLifecycleOwner) {
+        viewModel.TracksListLiveData.observe(this) {
             showTracks(it)
         }
-        viewModel.VisbilityHistory.observe(viewLifecycleOwner) {
+        viewModel.VisbilityHistory.observe(this) {
             if (it) {
                 showHistory()
             } else {
@@ -102,6 +88,10 @@ class SearchFragment : Fragment(), SearchScreenView {
         }
         binding.btHistoryClear.setOnClickListener {
             viewModel.clearHistory()
+        }
+
+        binding.backIconSearch.setOnClickListener {
+            goBack()
         }
         binding.clearText.setOnClickListener {
             viewModel.SearchTextClearClicked()
@@ -147,7 +137,7 @@ class SearchFragment : Fragment(), SearchScreenView {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
-                getKoin().get<Router>().addToMedia(it, requireActivity() as AppCompatActivity)
+                getKoin().get<Router>().addToMedia(it, this)
             }
         }
         trackHistoryAdapter.trackAdapterList = historyList
@@ -160,7 +150,7 @@ class SearchFragment : Fragment(), SearchScreenView {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
-                getKoin().get<Router>().addToMedia(it, requireActivity() as AppCompatActivity)
+                getKoin().get<Router>().addToMedia(it, this)
             }
         }
         trackAdapter.trackAdapterList = trackList
@@ -170,7 +160,7 @@ class SearchFragment : Fragment(), SearchScreenView {
 
     private fun addTrackToHistory(track: Track) = viewModel.addTrackToHistory(track)
 
-    private fun clickDebounce(): Boolean {
+    fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -230,7 +220,7 @@ class SearchFragment : Fragment(), SearchScreenView {
 
     override fun hideKeyboard() {
         val inputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(binding.clearText.windowToken, 0)
     }
 
@@ -242,7 +232,7 @@ class SearchFragment : Fragment(), SearchScreenView {
     }
 
     override fun goBack() {
-        requireActivity().finish()
+        finish()
     }
 
     override fun hideYourText() {

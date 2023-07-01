@@ -2,16 +2,17 @@
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context="com.practicum.playlistmaker.player.activity.MediaActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id = "@+id/layout_media"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
+    tools:context=".player.activity.MediaActivity"
+
     >
 
     <androidx.constraintlayout.widget.Guideline

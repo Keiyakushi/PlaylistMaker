@@ -6,19 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical"
-    tools:context="com.practicum.playlistmaker.ui.root.search.SearchFragment">
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/back_icon_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/twenty_dp"
+            android:paddingTop="@dimen/twenty_dp"
+            android:paddingRight="@dimen/twenty_eight_dp"
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/ic_back_icon"
+            app:tint="?attr/colorOnSecondary" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ys_display_medium"
-            android:paddingLeft="12dp"
-            android:paddingTop="10dp"
+            android:paddingLeft="61dp"
+            android:paddingTop="14dp"
             android:text="@string/search"
             android:textColor="?attr/colorOnSecondary"
             android:textFontWeight="500"
