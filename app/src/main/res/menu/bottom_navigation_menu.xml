@@ -6,10 +6,9 @@
         android:title="@string/search" />
 
     <item
-        android:id="@+id/libraryFragment"
+        android:id="@+id/mediaFragment"
         android:icon="@drawable/ic_media"
         android:title="@string/media" />
-
 
     <item
         android:id="@+id/settingsFragment"
