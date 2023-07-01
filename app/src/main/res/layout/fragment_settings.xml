@@ -5,29 +5,18 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.practicum.playlistmaker.ui.root.settings.SettingsFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/back_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/twenty_dp"
-            android:paddingTop="@dimen/twenty_dp"
-            android:paddingRight="28dp"
-            android:scaleType="fitStart"
-            app:srcCompat ="@drawable/ic_back_icon"
-            app:tint = "?attr/colorOnSecondary"
-            />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="61dp"
-            android:paddingTop="14dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="10dp"
             android:text="@string/settings"
             android:textColor="?attr/colorOnSecondary"
             android:textSize="@dimen/medium_text_size"

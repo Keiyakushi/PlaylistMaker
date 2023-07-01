@@ -9,7 +9,7 @@ import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmaker.media.view_model.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistsFragment : Fragment(){
+class PlaylistsFragment : Fragment() {
     private val viewModel by viewModel<PlaylistsViewModel>()
 
     override fun onCreateView(

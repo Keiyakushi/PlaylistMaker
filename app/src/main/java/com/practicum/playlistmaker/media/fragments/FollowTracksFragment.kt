@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.practicum.playlistmaker.databinding.FragmentFollowTracksBinding
 import com.practicum.playlistmaker.media.view_model.FollowTracksViewModel
-import com.practicum.playlistmaker.media.view_model.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FollowTracksFragment : Fragment(){
+class FollowTracksFragment : Fragment() {
     private val viewModel by viewModel<FollowTracksViewModel>()
 
     override fun onCreateView(

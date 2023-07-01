@@ -22,7 +22,7 @@
         android:text="@string/empty_media"
         android:fontFamily="@font/ys_display_medium"
         android:textColor="?attr/track_text"
-        android:textFontWeight="500"
+        android:textFontWeight="400"
         android:textSize="@dimen/small_text_size"
         android:textAllCaps="false"
         android:textStyle="bold"
