@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MediaActivity : AppCompatActivity(), PlayerView {
+class MediaPlayerActivity : AppCompatActivity(), PlayerView {
     companion object {
         const val MEDIA_KEY = "MEDIA_KEY"
     }

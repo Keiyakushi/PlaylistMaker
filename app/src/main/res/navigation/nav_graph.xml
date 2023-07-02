@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_settings" />
     <activity
         android:id="@+id/mediaActivity2"
-        android:name="com.practicum.playlistmaker.player.activity.MediaActivity"
+        android:name="com.practicum.playlistmaker.player.activity.MediaPlayerActivity"
         android:label="activity_media"
         tools:layout="@layout/activity_media" />
 </navigation>
