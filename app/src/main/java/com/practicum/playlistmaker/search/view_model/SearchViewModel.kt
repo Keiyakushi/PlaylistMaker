@@ -1,11 +1,14 @@
 package com.practicum.playlistmaker.search.view_model
 
+import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.practicum.playlistmaker.player.data.HandlerR
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.domain.SearchInteractor
+import org.koin.android.ext.android.getKoin
 
 class SearchViewModel(
     private val interactor: SearchInteractor,
@@ -19,7 +22,6 @@ class SearchViewModel(
     val VisbilityHistory: LiveData<Boolean> = _VisbilityHistory
     private val _TracksListLiveData = MutableLiveData<List<Track>>()
     val TracksListLiveData: LiveData<List<Track>> = _TracksListLiveData
-
 
     override fun onCleared() {
         super.onCleared()

@@ -14,6 +14,7 @@
         android:name="com.practicum.playlistmaker.ui.root.media.MediaFragment"
         android:label="fragment_media_store_tab"
         tools:layout="@layout/fragment_media_store_tab" />
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.practicum.playlistmaker.ui.root.settings.SettingsFragment"
@@ -21,7 +22,7 @@
         tools:layout="@layout/fragment_settings" />
     <activity
         android:id="@+id/mediaActivity2"
-        android:name="com.practicum.playlistmaker.player.activity.MediaActivity"
+        android:name="com.practicum.playlistmaker.player.activity.MediaPlayerActivity"
         android:label="activity_media"
         tools:layout="@layout/activity_media" />
 </navigation>

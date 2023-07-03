@@ -30,16 +30,17 @@ class SearchFragment : Fragment(), SearchScreenView {
         const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
         const val CLICK_DEBOUNCE_DELAY_MS = 1000L
     }
-
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
+    private lateinit var searchRunnable : Runnable
     var isClickAllowed = true
     var savedText: String = ""
     private val viewModel: SearchViewModel by viewModel {
         parametersOf(historyList)
     }
+    private lateinit var textWatcher: TextWatcher
     private lateinit var trackAdapter: TrackAdapter
-
+    private lateinit var trackHistoryAdapter : TrackAdapter
     override fun onStop() {
         super.onStop()
         viewModel.addAllToSaveHistory(historyList)
@@ -65,12 +66,12 @@ class SearchFragment : Fragment(), SearchScreenView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         trackAdapter = initTrackAdapter(binding.recyclerView)
-        initTrackHistoryAdapter()
+        trackHistoryAdapter = initTrackHistoryAdapter(binding.historySearchList)
 
-        viewModel.ClearHistoryListLiveData.observe(viewLifecycleOwner) { historyList ->
-            if (historyList.isEmpty()) {
+        viewModel.ClearHistoryListLiveData.observe(viewLifecycleOwner) {
+            if (viewModel.addAllToHistory().isEmpty()) {
                 hideHistory()
-            } else {
+            } else{
                 showHistory()
             }
         }
@@ -81,16 +82,20 @@ class SearchFragment : Fragment(), SearchScreenView {
                     hideKeyboard()
                     hideTracks()
                     clearSearchText()
+                    if (viewModel.addAllToHistory().isNotEmpty())
+                        showHistory()
                 }
                 SearchState.ShowEmptyResult -> showEmptyResult()
                 SearchState.ShowTracksError -> showTracksError()
             }
         }
         viewModel.TracksListLiveData.observe(viewLifecycleOwner) {
+            if (binding.searchEditText.text.toString().isNotEmpty())
             showTracks(it)
         }
         viewModel.VisbilityHistory.observe(viewLifecycleOwner) {
             if (it) {
+                if (viewModel.addAllToHistory().isNotEmpty())
                 showHistory()
             } else {
                 hideHistory()
@@ -110,14 +115,14 @@ class SearchFragment : Fragment(), SearchScreenView {
             viewModel.loadTracks(savedText)
         }
 
-        val searchRunnable = Runnable { viewModel.loadTracks(savedText) }
+        searchRunnable = Runnable { viewModel.loadTracks(savedText) }
 
         fun searchDebounce() {
             getKoin().get<HandlerR>().get().removeCallbacks(searchRunnable)
             getKoin().get<HandlerR>().get().postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MS)
         }
 
-        val textWatcher = object : TextWatcher {
+        textWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -129,7 +134,13 @@ class SearchFragment : Fragment(), SearchScreenView {
                         View.VISIBLE
                     }
                 savedText = p0.toString()
+                if (p0.isNullOrEmpty()){
+                    if (historyList.isNotEmpty())
+                    viewModel.hasTextOnWatcher(savedText)
+                    return
+                }else
                 searchDebounce()
+                trackAdapter = initTrackAdapter(binding.recyclerView)
                 viewModel.hasTextOnWatcher(savedText)
             }
 
@@ -142,8 +153,8 @@ class SearchFragment : Fragment(), SearchScreenView {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initTrackHistoryAdapter() {
-        val trackHistoryAdapter = TrackAdapter {
+    private fun initTrackHistoryAdapter(recyclerView: RecyclerView) : TrackAdapter{
+        trackHistoryAdapter = TrackAdapter {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
@@ -152,11 +163,12 @@ class SearchFragment : Fragment(), SearchScreenView {
         }
         trackHistoryAdapter.trackAdapterList = historyList
         binding.historySearchList.adapter = trackHistoryAdapter
+        return trackHistoryAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initTrackAdapter(recyclerView: RecyclerView): TrackAdapter {
-        val trackAdapter = TrackAdapter {
+        trackAdapter = TrackAdapter {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
@@ -186,6 +198,9 @@ class SearchFragment : Fragment(), SearchScreenView {
     }
 
     override fun showHistory() {
+        trackHistoryAdapter.trackAdapterList.clear()
+        trackHistoryAdapter.trackAdapterList.addAll(viewModel.addAllToHistory())
+        trackHistoryAdapter.notifyDataSetChanged()
         binding.historyLayout.visibility = View.VISIBLE
     }
 
@@ -234,7 +249,10 @@ class SearchFragment : Fragment(), SearchScreenView {
         inputMethodManager?.hideSoftInputFromWindow(binding.clearText.windowToken, 0)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun hideTracks() {
+        trackAdapter.trackAdapterList.clear()
+        trackAdapter.notifyDataSetChanged()
         binding.progressBar.visibility = View.GONE
         binding.recyclerView.visibility = View.GONE
         binding.iwNoResultLayout.visibility = View.GONE
