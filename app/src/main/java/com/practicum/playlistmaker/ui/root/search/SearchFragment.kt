@@ -51,12 +51,6 @@ class SearchFragment : Fragment(), SearchScreenView {
         viewModel.addAllToSaveHistory(historyList)
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (savedText.isNullOrEmpty())
-        hideTracks()
-    }
-
     private lateinit var binding: FragmentSearchBinding
 
     override fun onCreateView(
@@ -72,12 +66,12 @@ class SearchFragment : Fragment(), SearchScreenView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         trackAdapter = initTrackAdapter(binding.recyclerView)
-        initTrackHistoryAdapter()
+        trackHistoryAdapter = initTrackHistoryAdapter(binding.historySearchList)
 
-        viewModel.ClearHistoryListLiveData.observe(viewLifecycleOwner) { historyList ->
-            if (historyList.isEmpty()) {
+        viewModel.ClearHistoryListLiveData.observe(viewLifecycleOwner) {
+            if (viewModel.addAllToHistory().isEmpty()) {
                 hideHistory()
-            } else {
+            } else{
                 showHistory()
             }
         }
@@ -88,16 +82,20 @@ class SearchFragment : Fragment(), SearchScreenView {
                     hideKeyboard()
                     hideTracks()
                     clearSearchText()
+                    if (viewModel.addAllToHistory().isNotEmpty())
+                        showHistory()
                 }
                 SearchState.ShowEmptyResult -> showEmptyResult()
                 SearchState.ShowTracksError -> showTracksError()
             }
         }
         viewModel.TracksListLiveData.observe(viewLifecycleOwner) {
+            if (binding.searchEditText.text.toString().isNotEmpty())
             showTracks(it)
         }
         viewModel.VisbilityHistory.observe(viewLifecycleOwner) {
             if (it) {
+                if (viewModel.addAllToHistory().isNotEmpty())
                 showHistory()
             } else {
                 hideHistory()
@@ -137,9 +135,12 @@ class SearchFragment : Fragment(), SearchScreenView {
                     }
                 savedText = p0.toString()
                 if (p0.isNullOrEmpty()){
+                    if (historyList.isNotEmpty())
+                    viewModel.hasTextOnWatcher(savedText)
                     return
                 }else
                 searchDebounce()
+                trackAdapter = initTrackAdapter(binding.recyclerView)
                 viewModel.hasTextOnWatcher(savedText)
             }
 
@@ -152,7 +153,7 @@ class SearchFragment : Fragment(), SearchScreenView {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initTrackHistoryAdapter() {
+    private fun initTrackHistoryAdapter(recyclerView: RecyclerView) : TrackAdapter{
         trackHistoryAdapter = TrackAdapter {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
@@ -162,6 +163,7 @@ class SearchFragment : Fragment(), SearchScreenView {
         }
         trackHistoryAdapter.trackAdapterList = historyList
         binding.historySearchList.adapter = trackHistoryAdapter
+        return trackHistoryAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -196,6 +198,9 @@ class SearchFragment : Fragment(), SearchScreenView {
     }
 
     override fun showHistory() {
+        trackHistoryAdapter.trackAdapterList.clear()
+        trackHistoryAdapter.trackAdapterList.addAll(viewModel.addAllToHistory())
+        trackHistoryAdapter.notifyDataSetChanged()
         binding.historyLayout.visibility = View.VISIBLE
     }
 
@@ -244,7 +249,10 @@ class SearchFragment : Fragment(), SearchScreenView {
         inputMethodManager?.hideSoftInputFromWindow(binding.clearText.windowToken, 0)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun hideTracks() {
+        trackAdapter.trackAdapterList.clear()
+        trackAdapter.notifyDataSetChanged()
         binding.progressBar.visibility = View.GONE
         binding.recyclerView.visibility = View.GONE
         binding.iwNoResultLayout.visibility = View.GONE

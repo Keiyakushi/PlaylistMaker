@@ -65,9 +65,7 @@ class SearchViewModel(
     }
 
     fun hasTextOnWatcher(query: String) {
-        if (query.isNotEmpty()){
-            _VisbilityHistory.postValue(false)
-        }
+        _VisbilityHistory.postValue(query.isEmpty())
     }
 
     fun addAllToHistory(): Array<Track> {
