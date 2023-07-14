@@ -73,15 +73,15 @@ class SearchViewModel(
     private fun processResult(data: List<Track>?, error: NetworkError?) {
         when {
             error != null -> {
-                _StartShowTracks.postValue(SearchState.ShowTracksError)
+                if (error == NetworkError.CONNECTION_ERROR) {
+                    _StartShowTracks.postValue(SearchState.ShowTracksError)
+                } else {
+                    _StartShowTracks.postValue(SearchState.ShowEmptyResult)
+                }
             }
 
             data != null -> {
-                if (data.isEmpty()) {
-                    _StartShowTracks.postValue(SearchState.ShowEmptyResult)
-                } else {
-                    _TracksListLiveData.postValue(data)
-                }
+                    _TracksListLiveData.postValue(data!!)
             }
         }
     }

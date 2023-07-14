@@ -20,6 +20,7 @@ import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.view_model.SearchScreenView
 import com.practicum.playlistmaker.search.view_model.SearchViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.getKoin
@@ -43,6 +44,7 @@ class SearchFragment : Fragment(), SearchScreenView {
     private lateinit var textWatcher: TextWatcher
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var trackHistoryAdapter: TrackAdapter
+    private var timerJob: Job? = null
     override fun onStop() {
         super.onStop()
         viewModel.addAllToSaveHistory(historyList)
@@ -121,7 +123,8 @@ class SearchFragment : Fragment(), SearchScreenView {
         }
 
         fun searchDebounce() {
-            viewLifecycleOwner.lifecycleScope.launch {
+            timerJob?.cancel()
+            timerJob = viewLifecycleOwner.lifecycleScope.launch {
                 delay(SEARCH_DEBOUNCE_DELAY_MS)
                 viewModel.loadTracks(savedText)
             }
