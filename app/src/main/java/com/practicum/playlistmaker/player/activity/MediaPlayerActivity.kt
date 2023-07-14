@@ -95,7 +95,7 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
         binding.trackNameMedia.text = track.trackName
         binding.artistNameMedia.text = track.artistName
         binding.timeDuration.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis.toLong())
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis?.toLong())
         binding.albumName.text = track.collectionName
         binding.yearScore.text = track.releaseDate.substring(0, 4)
         binding.genreName.text = track.primaryGenreName

@@ -23,7 +23,9 @@ class PlayerRepository : IMediaPlayerRepository {
 
     override fun startPlayer() {
         mediaPlayer.start()
-        playerState = PlayerState.STATE_PLAYING
+        if (playerState == PlayerState.STATE_PREPARED) {
+            playerState = PlayerState.STATE_PLAYING
+        }
     }
 
     override fun pausePlayer() {
