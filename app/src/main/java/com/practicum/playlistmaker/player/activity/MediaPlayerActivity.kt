@@ -52,6 +52,7 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
             }
         }
         getData()
+        viewModel.preparePlayer(getKoin().get<Router>().getTrack(this).previewUrl)
         viewModel.SetTime.observe(this) {
             setCurrentTime(it)
         }

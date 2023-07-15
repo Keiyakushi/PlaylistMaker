@@ -15,7 +15,7 @@ class PlayerViewModel(
     private val interactor: MediaPlayerInteractor,
 ) : ViewModel() {
     companion object {
-        private const val DELAY = 1000L
+        private const val DELAY = 300L
     }
 
     private val _state = MutableLiveData<PlayerStatus>()
@@ -50,14 +50,8 @@ class PlayerViewModel(
         _state.postValue(PlayerStatus.SetPauseImage)
         timerJob = viewModelScope.launch {
             while (interactor.getPlayerState() == PlayerState.STATE_PLAYING) {
-                val elapsedTime = interactor.getCurrentPosition()
-                val remainingTime = interactor.getDuration() - elapsedTime
-                if (remainingTime > 0) {
                     delay(DELAY)
                     _SetTime.postValue(interactor.getCurrentPosition())
-                } else {
-                    _state.postValue(PlayerStatus.SetTimeZero)
-                }
             }
         }
     }
@@ -78,7 +72,6 @@ class PlayerViewModel(
             }
             PlayerState.STATE_DEFAULT -> {
                 preparePlayer(url)
-                startPlayer()
             }
         }
     }
