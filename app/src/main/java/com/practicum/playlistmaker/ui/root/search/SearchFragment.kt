@@ -72,14 +72,14 @@ class SearchFragment : Fragment(), SearchScreenView {
         trackAdapter = initTrackAdapter(binding.recyclerView)
         trackHistoryAdapter = initTrackHistoryAdapter(binding.historySearchList)
 
-        viewModel.ClearHistoryListLiveData.observe(viewLifecycleOwner) {
+        viewModel.clearHistoryListLiveData.observe(viewLifecycleOwner) {
             if (viewModel.addAllToHistory().isEmpty()) {
                 hideHistory()
             } else {
                 showHistory()
             }
         }
-        viewModel.StartShowTracks.observe(viewLifecycleOwner) {
+        viewModel.startShowTracks.observe(viewLifecycleOwner) {
             when (it) {
                 SearchState.PrepareShowTracks -> StartShowTracks()
                 SearchState.SearchTextClear -> {
@@ -94,12 +94,12 @@ class SearchFragment : Fragment(), SearchScreenView {
                 SearchState.ShowTracksError -> showTracksError()
             }
         }
-        viewModel.TracksListLiveData.observe(viewLifecycleOwner) {
+        viewModel.tracksListLiveData.observe(viewLifecycleOwner) {
             if (binding.searchEditText.text.toString().isNotEmpty()) {
                 showTracks(it)
             }
         }
-        viewModel.VisbilityHistory.observe(viewLifecycleOwner) {
+        viewModel.visibilityHistory.observe(viewLifecycleOwner) {
             if (it) {
                 if (viewModel.addAllToHistory().isNotEmpty()) {
                     showHistory()
@@ -116,7 +116,7 @@ class SearchFragment : Fragment(), SearchScreenView {
             viewModel.clearHistory()
         }
         binding.clearText.setOnClickListener {
-            viewModel.SearchTextClearClicked()
+            viewModel.searchTextClearClicked()
         }
         binding.btUpdate.setOnClickListener {
             viewModel.loadTracks(savedText)

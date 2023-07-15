@@ -14,33 +14,33 @@ class SearchViewModel(
     private val interactor: SearchInteractor,
     private val historyList: ArrayList<Track>,
 ) : ViewModel() {
-    private val _ClearHistoryListLiveData = MutableLiveData<List<Track>>()
-    val ClearHistoryListLiveData: LiveData<List<Track>> = _ClearHistoryListLiveData
-    private val _StartShowTracks = MutableLiveData<SearchState>()
-    val StartShowTracks: LiveData<SearchState> = _StartShowTracks
-    private val _VisbilityHistory = MutableLiveData<Boolean>()
-    val VisbilityHistory: LiveData<Boolean> = _VisbilityHistory
-    private val _TracksListLiveData = MutableLiveData<List<Track>>()
-    val TracksListLiveData: LiveData<List<Track>> = _TracksListLiveData
+    private val _clearHistoryListLiveData = MutableLiveData<List<Track>>()
+    val clearHistoryListLiveData: LiveData<List<Track>> = _clearHistoryListLiveData
+    private val _startShowTracks = MutableLiveData<SearchState>()
+    val startShowTracks: LiveData<SearchState> = _startShowTracks
+    private val _visibilityHistory = MutableLiveData<Boolean>()
+    val visibilityHistory: LiveData<Boolean> = _visibilityHistory
+    private val _tracksListLiveData = MutableLiveData<List<Track>>()
+    val tracksListLiveData: LiveData<List<Track>> = _tracksListLiveData
 
     override fun onCleared() {
         super.onCleared()
         interactor.saveHistory(historyList)
     }
 
-    fun SearchTextClearClicked() {
-        _StartShowTracks.postValue(SearchState.SearchTextClear)
+    fun searchTextClearClicked() {
+        _startShowTracks.postValue(SearchState.SearchTextClear)
     }
 
     fun clearHistory() {
         historyList.clear()
         interactor.saveHistory(historyList)
-        _ClearHistoryListLiveData.postValue(historyList)
+        _clearHistoryListLiveData.postValue(historyList)
     }
 
     fun onFocusSearchChanged(hasFocus: Boolean, text: String) {
         if (hasFocus && text.isEmpty() && historyList.isNotEmpty()) {
-            _ClearHistoryListLiveData.postValue(historyList)
+            _clearHistoryListLiveData.postValue(historyList)
         }
     }
 
@@ -48,7 +48,7 @@ class SearchViewModel(
         if (query.isEmpty()) {
             return
         }
-        _StartShowTracks.postValue(SearchState.PrepareShowTracks)
+        _startShowTracks.postValue(SearchState.PrepareShowTracks)
         viewModelScope.launch {
             interactor
                 .loadTracks(query = query)
@@ -59,7 +59,7 @@ class SearchViewModel(
     }
 
     fun hasTextOnWatcher(query: String) {
-        _VisbilityHistory.postValue(query.isEmpty())
+        _visibilityHistory.postValue(query.isEmpty())
     }
 
     fun addAllToHistory(): Array<Track> {
@@ -74,14 +74,14 @@ class SearchViewModel(
         when {
             error != null -> {
                 if (error == NetworkError.CONNECTION_ERROR) {
-                    _StartShowTracks.postValue(SearchState.ShowTracksError)
+                    _startShowTracks.postValue(SearchState.ShowTracksError)
                 } else {
-                    _StartShowTracks.postValue(SearchState.ShowEmptyResult)
+                    _startShowTracks.postValue(SearchState.ShowEmptyResult)
                 }
             }
 
             data != null -> {
-                    _TracksListLiveData.postValue(data!!)
+                    _tracksListLiveData.postValue(data!!)
             }
         }
     }
