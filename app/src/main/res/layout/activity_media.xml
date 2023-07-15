@@ -157,7 +157,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:fontFamily="@font/ys_display_regular"
-        android:text="@string/timing"
+        android:text="@string/timing_zero"
         android:textColor="?attr/track_text"
         android:textFontWeight="400"
         android:textSize="14sp"

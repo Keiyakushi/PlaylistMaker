@@ -23,7 +23,7 @@
     <string name="nothing_search">Ничего не нашлось</string>
     <string name="your_search">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
-    <string name="timing">00:00</string>
+    <string name="timing">00:30</string>
     <string name="duration">Длительность</string>
     <string name="time_2">5:35</string>
     <string name="album">Альбом</string>
@@ -44,4 +44,5 @@
     <string name="favorite_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
     <string name="empty_playlists">Вы не создали \n ни одного плейлиста</string>
+    <string name="timing_zero">00:00</string>
 </resources>
