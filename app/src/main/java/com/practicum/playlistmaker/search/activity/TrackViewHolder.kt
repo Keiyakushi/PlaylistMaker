@@ -14,10 +14,12 @@ class TrackViewHolder(private val binding: TrackListViewBinding) :
     fun bind(model: Track) {
         binding.trackName.text = model.trackName
         binding.artistName.text = model.artistName
-        binding.trackTime.text = SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
-        ).format(model.trackTimeMillis.toLong())
+        binding.trackTime.text = (if (model.trackTimeMillis == null) {
+            ""
+        } else {
+            SimpleDateFormat("mm:ss", Locale.getDefault())
+                .format(model.trackTimeMillis.toLong())
+        }).toString()
         Glide.with(itemView)
             .load(model.artworkUrl100)
             .placeholder(R.drawable.ic_none_image)

@@ -11,15 +11,18 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.player.data.HandlerR
 import com.practicum.playlistmaker.router.Router
 import com.practicum.playlistmaker.search.activity.TrackAdapter
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.view_model.SearchScreenView
 import com.practicum.playlistmaker.search.view_model.SearchViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -30,9 +33,9 @@ class SearchFragment : Fragment(), SearchScreenView {
         const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
         const val CLICK_DEBOUNCE_DELAY_MS = 1000L
     }
+
     private val historyList = ArrayList<Track>()
     private val trackList = ArrayList<Track>()
-    private lateinit var searchRunnable : Runnable
     var isClickAllowed = true
     var savedText: String = ""
     private val viewModel: SearchViewModel by viewModel {
@@ -40,7 +43,8 @@ class SearchFragment : Fragment(), SearchScreenView {
     }
     private lateinit var textWatcher: TextWatcher
     private lateinit var trackAdapter: TrackAdapter
-    private lateinit var trackHistoryAdapter : TrackAdapter
+    private lateinit var trackHistoryAdapter: TrackAdapter
+    private var timerJob: Job? = null
     override fun onStop() {
         super.onStop()
         viewModel.addAllToSaveHistory(historyList)
@@ -68,35 +72,38 @@ class SearchFragment : Fragment(), SearchScreenView {
         trackAdapter = initTrackAdapter(binding.recyclerView)
         trackHistoryAdapter = initTrackHistoryAdapter(binding.historySearchList)
 
-        viewModel.ClearHistoryListLiveData.observe(viewLifecycleOwner) {
+        viewModel.clearHistoryListLiveData.observe(viewLifecycleOwner) {
             if (viewModel.addAllToHistory().isEmpty()) {
                 hideHistory()
-            } else{
+            } else {
                 showHistory()
             }
         }
-        viewModel.StartShowTracks.observe(viewLifecycleOwner) {
+        viewModel.startShowTracks.observe(viewLifecycleOwner) {
             when (it) {
                 SearchState.PrepareShowTracks -> StartShowTracks()
                 SearchState.SearchTextClear -> {
                     hideKeyboard()
                     hideTracks()
                     clearSearchText()
-                    if (viewModel.addAllToHistory().isNotEmpty())
+                    if (viewModel.addAllToHistory().isNotEmpty()) {
                         showHistory()
+                    }
                 }
                 SearchState.ShowEmptyResult -> showEmptyResult()
                 SearchState.ShowTracksError -> showTracksError()
             }
         }
-        viewModel.TracksListLiveData.observe(viewLifecycleOwner) {
-            if (binding.searchEditText.text.toString().isNotEmpty())
-            showTracks(it)
+        viewModel.tracksListLiveData.observe(viewLifecycleOwner) {
+            if (binding.searchEditText.text.toString().isNotEmpty()) {
+                showTracks(it)
+            }
         }
-        viewModel.VisbilityHistory.observe(viewLifecycleOwner) {
+        viewModel.visibilityHistory.observe(viewLifecycleOwner) {
             if (it) {
-                if (viewModel.addAllToHistory().isNotEmpty())
-                showHistory()
+                if (viewModel.addAllToHistory().isNotEmpty()) {
+                    showHistory()
+                }
             } else {
                 hideHistory()
             }
@@ -109,17 +116,18 @@ class SearchFragment : Fragment(), SearchScreenView {
             viewModel.clearHistory()
         }
         binding.clearText.setOnClickListener {
-            viewModel.SearchTextClearClicked()
+            viewModel.searchTextClearClicked()
         }
         binding.btUpdate.setOnClickListener {
             viewModel.loadTracks(savedText)
         }
 
-        searchRunnable = Runnable { viewModel.loadTracks(savedText) }
-
         fun searchDebounce() {
-            getKoin().get<HandlerR>().get().removeCallbacks(searchRunnable)
-            getKoin().get<HandlerR>().get().postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MS)
+            timerJob?.cancel()
+            timerJob = viewLifecycleOwner.lifecycleScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY_MS)
+                viewModel.loadTracks(savedText)
+            }
         }
 
         textWatcher = object : TextWatcher {
@@ -134,12 +142,13 @@ class SearchFragment : Fragment(), SearchScreenView {
                         View.VISIBLE
                     }
                 savedText = p0.toString()
-                if (p0.isNullOrEmpty()){
+                if (p0.isNullOrEmpty()) {
                     if (historyList.isNotEmpty())
-                    viewModel.hasTextOnWatcher(savedText)
+                        viewModel.hasTextOnWatcher(savedText)
                     return
-                }else
-                searchDebounce()
+                } else {
+                    searchDebounce()
+                }
                 trackAdapter = initTrackAdapter(binding.recyclerView)
                 viewModel.hasTextOnWatcher(savedText)
             }
@@ -153,7 +162,7 @@ class SearchFragment : Fragment(), SearchScreenView {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initTrackHistoryAdapter(recyclerView: RecyclerView) : TrackAdapter{
+    private fun initTrackHistoryAdapter(recyclerView: RecyclerView): TrackAdapter {
         trackHistoryAdapter = TrackAdapter {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
@@ -186,8 +195,10 @@ class SearchFragment : Fragment(), SearchScreenView {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            getKoin().get<HandlerR>().get()
-                .postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MS)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MS)
+                isClickAllowed = true
+            }
         }
         return current
     }

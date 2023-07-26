@@ -1,46 +1,46 @@
 package com.practicum.playlistmaker.search.view_model
 
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.practicum.playlistmaker.player.data.HandlerR
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
+import com.practicum.playlistmaker.search.domain.NetworkError
 import com.practicum.playlistmaker.search.domain.SearchInteractor
-import org.koin.android.ext.android.getKoin
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val interactor: SearchInteractor,
     private val historyList: ArrayList<Track>,
 ) : ViewModel() {
-    private val _ClearHistoryListLiveData = MutableLiveData<List<Track>>()
-    val ClearHistoryListLiveData: LiveData<List<Track>> = _ClearHistoryListLiveData
-    private val _StartShowTracks = MutableLiveData<SearchState>()
-    val StartShowTracks: LiveData<SearchState> = _StartShowTracks
-    private val _VisbilityHistory = MutableLiveData<Boolean>()
-    val VisbilityHistory: LiveData<Boolean> = _VisbilityHistory
-    private val _TracksListLiveData = MutableLiveData<List<Track>>()
-    val TracksListLiveData: LiveData<List<Track>> = _TracksListLiveData
+    private val _clearHistoryListLiveData = MutableLiveData<List<Track>>()
+    val clearHistoryListLiveData: LiveData<List<Track>> = _clearHistoryListLiveData
+    private val _startShowTracks = MutableLiveData<SearchState>()
+    val startShowTracks: LiveData<SearchState> = _startShowTracks
+    private val _visibilityHistory = MutableLiveData<Boolean>()
+    val visibilityHistory: LiveData<Boolean> = _visibilityHistory
+    private val _tracksListLiveData = MutableLiveData<List<Track>>()
+    val tracksListLiveData: LiveData<List<Track>> = _tracksListLiveData
 
     override fun onCleared() {
         super.onCleared()
         interactor.saveHistory(historyList)
     }
 
-    fun SearchTextClearClicked() {
-        _StartShowTracks.postValue(SearchState.SearchTextClear)
+    fun searchTextClearClicked() {
+        _startShowTracks.postValue(SearchState.SearchTextClear)
     }
 
     fun clearHistory() {
         historyList.clear()
         interactor.saveHistory(historyList)
-        _ClearHistoryListLiveData.postValue(historyList)
+        _clearHistoryListLiveData.postValue(historyList)
     }
 
     fun onFocusSearchChanged(hasFocus: Boolean, text: String) {
         if (hasFocus && text.isEmpty() && historyList.isNotEmpty()) {
-            _ClearHistoryListLiveData.postValue(historyList)
+            _clearHistoryListLiveData.postValue(historyList)
         }
     }
 
@@ -48,24 +48,18 @@ class SearchViewModel(
         if (query.isEmpty()) {
             return
         }
-        _StartShowTracks.postValue(SearchState.PrepareShowTracks)
-        interactor.loadTracks(
-            query = query,
-            onSuccess = { it ->
-                if (it.isEmpty()) {
-                    _StartShowTracks.postValue(SearchState.ShowEmptyResult)
-                } else {
-                    _TracksListLiveData.postValue(it)
+        _startShowTracks.postValue(SearchState.PrepareShowTracks)
+        viewModelScope.launch {
+            interactor
+                .loadTracks(query = query)
+                .collect { pair ->
+                    processResult(pair.first, pair.second)
                 }
-            },
-            onError = {
-                _StartShowTracks.postValue(SearchState.ShowTracksError)
-            }
-        )
+        }
     }
 
     fun hasTextOnWatcher(query: String) {
-        _VisbilityHistory.postValue(query.isEmpty())
+        _visibilityHistory.postValue(query.isEmpty())
     }
 
     fun addAllToHistory(): Array<Track> {
@@ -74,6 +68,22 @@ class SearchViewModel(
 
     fun addAllToSaveHistory(historyList: ArrayList<Track>) {
         interactor.saveHistory(this.historyList)
+    }
+
+    private fun processResult(data: List<Track>?, error: NetworkError?) {
+        when {
+            error != null -> {
+                if (error == NetworkError.CONNECTION_ERROR) {
+                    _startShowTracks.postValue(SearchState.ShowTracksError)
+                } else {
+                    _startShowTracks.postValue(SearchState.ShowEmptyResult)
+                }
+            }
+
+            data != null -> {
+                    _tracksListLiveData.postValue(data!!)
+            }
+        }
     }
 
     fun addTrackToHistory(track: Track) {
