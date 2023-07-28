@@ -7,12 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.data.PlayerStatus
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.practicum.playlistmaker.search.data.Track
+import com.practicum.playlistmaker.search.domain.db.FavoriteInteractor
+import kotlinx.coroutines.*
 
 class PlayerViewModel(
     private val interactor: MediaPlayerInteractor,
+    private val favInteractor : FavoriteInteractor,
 ) : ViewModel() {
     companion object {
         private const val DELAY = 300L
@@ -20,9 +21,14 @@ class PlayerViewModel(
 
     private val _state = MutableLiveData<PlayerStatus>()
     val state: LiveData<PlayerStatus> = _state
-    private val _SetTime = MutableLiveData<Int>()
-    val SetTime: LiveData<Int> = _SetTime
+    private val _setTime = MutableLiveData<Int>()
+    val setTime: LiveData<Int> = _setTime
+    private val _setFollow = MutableLiveData<Boolean>()
+    val setFollow = _setFollow
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite = _isFavorite
     private var timerJob: Job? = null
+    private var isFavoriteChek: Boolean = false
 
 
     override fun onCleared() {
@@ -51,7 +57,7 @@ class PlayerViewModel(
         timerJob = viewModelScope.launch {
             while (interactor.getPlayerState() == PlayerState.STATE_PLAYING) {
                     delay(DELAY)
-                    _SetTime.postValue(interactor.getCurrentPosition())
+                    _setTime.postValue(interactor.getCurrentPosition())
             }
         }
     }
@@ -75,5 +81,21 @@ class PlayerViewModel(
             }
         }
     }
-
+    fun isFavorite(id: Int) {
+        viewModelScope.launch() {
+            isFavoriteChek = favInteractor.isFavorite(id)
+            _isFavorite.postValue(isFavoriteChek)
+        }
+    }
+    fun onBtFavoriteClicked(track:Track){
+        viewModelScope.launch() {
+                if (isFavoriteChek) {
+                    favInteractor.deleteTrack(track)
+                    _setFollow.postValue(true)
+                } else {
+                    favInteractor.addTrack(track)
+                    _setFollow.postValue(false)
+                }
+        }
+    }
 }

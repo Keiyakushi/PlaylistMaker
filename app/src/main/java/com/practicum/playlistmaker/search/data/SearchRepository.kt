@@ -3,6 +3,8 @@ package com.practicum.playlistmaker.search.data
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.practicum.playlistmaker.data.db.entity.AppDatabase
+import com.practicum.playlistmaker.data.db.entity.TrackId
 import com.practicum.playlistmaker.search.domain.ISearchRepository
 import com.practicum.playlistmaker.search.domain.NetworkError
 import com.practicum.playlistmaker.search.domain.Resource
@@ -12,7 +14,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 
-class SearchRepository(val api: Network, val searchHistory: SearchHistory, val context: Context) :
+class SearchRepository(val api: Network, val searchHistory: SearchHistory, val context: Context,
+val appDatabase: AppDatabase) :
     ISearchRepository {
 
     override suspend fun doRequest(query: String): Response {
@@ -61,7 +64,7 @@ class SearchRepository(val api: Network, val searchHistory: SearchHistory, val c
                 if (resultList.isEmpty()) {
                     emit(Resource.Error(NetworkError.SEARCH_ERROR))
                 } else {
-                    val trackList = resultList.filter { it.previewUrl != null }
+                    val trackList = resultList
                     emit(Resource.Success(trackList as ArrayList<Track>))
                 }
             }
