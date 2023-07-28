@@ -7,14 +7,16 @@ import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.domain.db.FavoriteInteractor
 import kotlinx.coroutines.launch
 
-class FollowTracksViewModel(val interactor: FavoriteInteractor) : ViewModel(){
+class FollowTracksViewModel(val interactor: FavoriteInteractor) : ViewModel() {
     private val _setFollow = MutableLiveData<Boolean>()
     val setFollow = _setFollow
     private val _getTrack = MutableLiveData<ArrayList<Track>>()
     val getTrack = _getTrack
+
     init {
         fillData()
     }
+
     fun fillData() {
         viewModelScope.launch {
             interactor
@@ -26,11 +28,15 @@ class FollowTracksViewModel(val interactor: FavoriteInteractor) : ViewModel(){
     }
 
     private fun processResult(trackList: List<Track>) {
-        if (trackList.isEmpty()){
+        if (trackList.isEmpty()) {
             _setFollow.postValue(true)
-        }else{
+        } else {
             _setFollow.postValue(false)
-            getTrack.postValue(trackList.reversed() as ArrayList<Track>)
+            if (trackList.size >= 2) {
+                getTrack.postValue(trackList.reversed() as ArrayList<Track>)
+            } else {
+                getTrack.postValue(trackList as ArrayList<Track>?)
+            }
         }
     }
 }

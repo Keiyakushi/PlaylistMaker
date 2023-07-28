@@ -7,6 +7,8 @@
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_arrow.xml" value="0.242" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_back_icon.xml" value="0.248" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_add_playlist.xml" value="0.242" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_follow.xml" value="0.2615" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_follow_dark.xml" value="0.2615" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_pause.xml" value="0.2565" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_pause_dark.xml" value="0.155" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_play.xml" value="0.2565" />
@@ -26,7 +28,7 @@
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_search.xml" value="0.22" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_settings2.xml" value="0.3009833262077811" />
-        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_follow_tracks.xml" value="0.67" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_follow_tracks.xml" value="0.33" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_media_store_tab.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_playlists.xml" value="0.5" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_search.xml" value="0.3009833262077811" />

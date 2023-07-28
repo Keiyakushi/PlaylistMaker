@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.search.domain.db.FavoriteInteractor
 import com.practicum.playlistmaker.search.domain.db.FavoriteRepository
 import kotlinx.coroutines.flow.Flow
 
-class FavoriteInteractorImpl(private val repository: FavoriteRepository) :FavoriteInteractor{
+class FavoriteInteractorImpl(private val repository: FavoriteRepository) : FavoriteInteractor {
 
     override suspend fun addTrack(track: Track) {
         repository.addTrack(track)
@@ -18,7 +18,8 @@ class FavoriteInteractorImpl(private val repository: FavoriteRepository) :Favori
     override fun getFavoriteTracks(): Flow<List<Track>> {
         return repository.getFavoriteTracks()
     }
-    override suspend fun isFavorite(id: Int): Boolean{
+
+    override suspend fun isFavorite(id: Int): Boolean {
         return repository.isFavorite(id)
     }
 }

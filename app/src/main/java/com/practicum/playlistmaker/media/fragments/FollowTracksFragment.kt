@@ -8,10 +8,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.FragmentFollowTracksBinding
-import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.media.view_model.FollowTracksViewModel
 import com.practicum.playlistmaker.router.Router
 import com.practicum.playlistmaker.search.activity.TrackAdapter
@@ -27,7 +25,7 @@ class FollowTracksFragment : Fragment() {
     private lateinit var trackAdapter: TrackAdapter
     private var trackList = ArrayList<Track>()
     private lateinit var binding: FragmentFollowTracksBinding
-    var isClickAllowed = true
+    private var isClickAllowed = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -45,13 +43,14 @@ class FollowTracksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         trackAdapter = initTrackAdapter(binding.recyclerView)
         viewModel.fillData()
-        viewModel.setFollow.observe(viewLifecycleOwner){
+        viewModel.setFollow.observe(viewLifecycleOwner) {
             render(it)
         }
-        viewModel.getTrack.observe(viewLifecycleOwner){
+        viewModel.getTrack.observe(viewLifecycleOwner) {
             showFavTracks(it)
         }
     }
+
     private fun initTrackAdapter(recyclerView: RecyclerView): TrackAdapter {
         trackAdapter = TrackAdapter {
             if (clickDebounce()) {
@@ -62,6 +61,7 @@ class FollowTracksFragment : Fragment() {
         recyclerView.adapter = trackAdapter
         return trackAdapter
     }
+
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -73,14 +73,16 @@ class FollowTracksFragment : Fragment() {
         }
         return current
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun showFavTracks(track: ArrayList<Track>){
+    private fun showFavTracks(track: ArrayList<Track>) {
         trackList.clear()
         trackList.addAll(track)
         trackAdapter.notifyDataSetChanged()
     }
-    fun render(it : Boolean){
-        if(it){
+
+    fun render(it: Boolean) {
+        if (it) {
             binding.emptyMedia.visibility = View.VISIBLE
             binding.emptyMediaText.visibility = View.VISIBLE
             binding.recyclerView.visibility = View.GONE
@@ -90,6 +92,7 @@ class FollowTracksFragment : Fragment() {
             binding.emptyMediaText.visibility = View.GONE
         }
     }
+
     companion object {
         fun newInstance() = FollowTracksFragment()
     }

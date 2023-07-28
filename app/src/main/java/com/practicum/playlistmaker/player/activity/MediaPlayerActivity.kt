@@ -23,7 +23,7 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
     }
 
     private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
-    lateinit var track : Track
+    lateinit var track: Track
     private val viewModel: PlayerViewModel by viewModel()
 
     override fun onPause() {
@@ -54,15 +54,15 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
         getData()
         viewModel.isFavorite(track.trackId)
         viewModel.preparePlayer(getKoin().get<Router>().getTrack(this).previewUrl)
-        viewModel.setFollow.observe(this){
-            if (it){
+        viewModel.setFollow.observe(this) {
+            if (it) {
                 binding.btFollow.setImageResource(R.drawable.ic_bt_follow)
             } else {
                 binding.btFollow.setImageResource(R.drawable.ic_button_follow_red)
             }
         }
-        viewModel.isFavorite.observe(this){
-            if (!it){
+        viewModel.isFavorite.observe(this) {
+            if (!it) {
                 binding.btFollow.setImageResource(R.drawable.ic_bt_follow)
             } else {
                 binding.btFollow.setImageResource(R.drawable.ic_button_follow_red)

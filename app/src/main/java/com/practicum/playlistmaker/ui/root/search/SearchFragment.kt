@@ -54,6 +54,7 @@ class SearchFragment : Fragment(), SearchScreenView {
         super.onDestroy()
         viewModel.addAllToSaveHistory(historyList)
     }
+
     private lateinit var binding: FragmentSearchBinding
 
     override fun onCreateView(

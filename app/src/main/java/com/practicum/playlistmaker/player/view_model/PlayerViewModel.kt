@@ -9,11 +9,13 @@ import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.domain.db.FavoriteInteractor
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val interactor: MediaPlayerInteractor,
-    private val favInteractor : FavoriteInteractor,
+    private val favInteractor: FavoriteInteractor,
 ) : ViewModel() {
     companion object {
         private const val DELAY = 300L
@@ -56,8 +58,8 @@ class PlayerViewModel(
         _state.postValue(PlayerStatus.SetPauseImage)
         timerJob = viewModelScope.launch {
             while (interactor.getPlayerState() == PlayerState.STATE_PLAYING) {
-                    delay(DELAY)
-                    _setTime.postValue(interactor.getCurrentPosition())
+                delay(DELAY)
+                _setTime.postValue(interactor.getCurrentPosition())
             }
         }
     }
@@ -81,21 +83,23 @@ class PlayerViewModel(
             }
         }
     }
+
     fun isFavorite(id: Int) {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             isFavoriteChek = favInteractor.isFavorite(id)
             _isFavorite.postValue(isFavoriteChek)
         }
     }
-    fun onBtFavoriteClicked(track:Track){
-        viewModelScope.launch() {
-                if (isFavoriteChek) {
-                    favInteractor.deleteTrack(track)
-                    _setFollow.postValue(true)
-                } else {
-                    favInteractor.addTrack(track)
-                    _setFollow.postValue(false)
-                }
+
+    fun onBtFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            if (isFavoriteChek) {
+                favInteractor.deleteTrack(track)
+                _setFollow.postValue(true)
+            } else {
+                favInteractor.addTrack(track)
+                _setFollow.postValue(false)
+            }
         }
     }
 }

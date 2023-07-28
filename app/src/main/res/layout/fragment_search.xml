@@ -229,7 +229,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="@dimen/fifty_dp"
                 android:backgroundTint="?attr/reload_button"
                 android:fontFamily="@font/ys_display_medium"
                 android:text="@string/clear_history"

@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.data.db.entity.AppDatabase
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.domain.NetworkError
 import com.practicum.playlistmaker.search.domain.SearchInteractor
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -83,14 +81,14 @@ class SearchViewModel(
             }
 
             data != null -> {
-                    _tracksListLiveData.postValue(data!!)
+                _tracksListLiveData.postValue(data)
             }
         }
     }
 
     fun addTrackToHistory(track: Track) {
         when {
-            historyList.contains(track)-> {
+            historyList.contains(track) -> {
                 historyList.remove(track)
                 historyList.add(0, track)
             }
