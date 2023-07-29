@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.data.db.entity
 
 import com.practicum.playlistmaker.search.data.Track
+import java.util.*
 
 class TrackDbConvertor {
 
@@ -15,7 +16,8 @@ class TrackDbConvertor {
             collectionName = track.collectionName,
             country = track.country,
             primaryGenreName = track.primaryGenreName,
-            releaseDate = track.releaseDate
+            releaseDate = track.releaseDate,
+            date = Date().toString()
         )
     }
 
@@ -30,6 +32,6 @@ class TrackDbConvertor {
             collectionName = track.collectionName,
             country = track.country,
             primaryGenreName = track.primaryGenreName,
-            releaseDate = track.releaseDate)
+            releaseDate = track.releaseDate,)
     }
 }

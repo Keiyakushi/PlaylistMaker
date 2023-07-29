@@ -32,11 +32,7 @@ class FollowTracksViewModel(val interactor: FavoriteInteractor) : ViewModel() {
             _setFollow.postValue(true)
         } else {
             _setFollow.postValue(false)
-            if (trackList.size >= 2) {
-                getTrack.postValue(trackList.reversed() as ArrayList<Track>)
-            } else {
-                getTrack.postValue(trackList as ArrayList<Track>?)
-            }
+            getTrack.postValue(trackList as ArrayList<Track>?)
         }
     }
 }

@@ -10,7 +10,7 @@ interface TrackDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrack(track: TrackEntity)
 
-    @Query("SELECT * FROM track_table")
+    @Query("SELECT * FROM track_table ORDER BY date DESC;")
     suspend fun getTracks(): List<TrackEntity>
 
     @Delete(entity = TrackEntity::class)
