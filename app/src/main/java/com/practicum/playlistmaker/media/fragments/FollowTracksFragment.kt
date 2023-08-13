@@ -5,19 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentFollowTracksBinding
 import com.practicum.playlistmaker.media.view_model.FollowTracksViewModel
-import com.practicum.playlistmaker.router.Router
+import com.practicum.playlistmaker.player.activity.MediaPlayerFragment
 import com.practicum.playlistmaker.search.activity.TrackAdapter
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.ui.root.search.SearchFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FollowTracksFragment : Fragment() {
@@ -54,7 +54,8 @@ class FollowTracksFragment : Fragment() {
     private fun initTrackAdapter(recyclerView: RecyclerView): TrackAdapter {
         trackAdapter = TrackAdapter {
             if (clickDebounce()) {
-                getKoin().get<Router>().addToMedia(it, requireActivity() as AppCompatActivity)
+                findNavController().navigate(R.id.action_mediaFragment_to_mediaPlayerFragment,
+                    MediaPlayerFragment.createArgs(it))
             }
         }
         trackAdapter.trackAdapterList = trackList
@@ -66,7 +67,7 @@ class FollowTracksFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
+            lifecycleScope.launch {
                 delay(SearchFragment.CLICK_DEBOUNCE_DELAY_MS)
                 isClickAllowed = true
             }

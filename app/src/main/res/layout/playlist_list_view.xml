@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    app:cardBackgroundColor="?attr/colorSecondary"
+    android:elevation="@dimen/eight_dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="@dimen/primary_dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/eight_dp">
+
+    <ImageView
+        android:id ="@+id/set_image_cover"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src = "@drawable/ic_none_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ImageContrastCheck"
+        />
+    <TextView
+        android:id = "@+id/name_playlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="@string/add_new_playlist"
+        android:textColor="?attr/colorOnSecondary"
+        android:layout_marginStart = "2dp"
+        android:textFontWeight="400"
+        android:layout_marginTop = "164dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/thirteen_sp"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id = "@+id/count_tracks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="0 треков"
+        android:textColor="?attr/colorOnSecondary"
+        android:layout_marginStart = "2dp"
+        android:textFontWeight="400"
+        android:layout_marginTop = "184dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/thirteen_sp"
+        android:textStyle="bold"
+        />
+
+</androidx.cardview.widget.CardView>
