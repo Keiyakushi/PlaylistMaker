@@ -61,7 +61,7 @@ class SearchRepository(val api: Network, val searchHistory: SearchHistory, val c
                 if (resultList.isEmpty()) {
                     emit(Resource.Error(NetworkError.SEARCH_ERROR))
                 } else {
-                    val trackList = resultList.filter { it.previewUrl != null }
+                    val trackList = resultList
                     emit(Resource.Success(trackList as ArrayList<Track>))
                 }
             }

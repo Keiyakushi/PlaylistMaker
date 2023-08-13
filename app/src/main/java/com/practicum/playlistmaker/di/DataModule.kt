@@ -1,8 +1,10 @@
 package com.practicum.playlistmaker.di
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
 import com.google.gson.Gson
 import com.practicum.playlistmaker.application.App
+import com.practicum.playlistmaker.data.db.entity.AppDatabase
 import com.practicum.playlistmaker.player.data.HandlerR
 import com.practicum.playlistmaker.router.Router
 import com.practicum.playlistmaker.search.data.Network
@@ -33,6 +35,10 @@ val dataModule = module {
     singleOf(::SearchHistory).bind()
     single {
         androidContext().getSharedPreferences(App.PREFERENCES, AppCompatActivity.MODE_PRIVATE)
+    }
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
     }
     singleOf(::SharedPreSettings).bind<ISettingsStorage>()
     singleOf(::SettingsRouter).bind<ISettingsRouter>()

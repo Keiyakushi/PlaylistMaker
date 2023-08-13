@@ -10,4 +10,5 @@
     <attr name="bt_play" format="reference"/>
     <attr name="bt_follow" format="reference"/>
     <attr name="bt_pause" format="reference"/>
+    <attr name="input_layout" format="reference"/>
 </resources>

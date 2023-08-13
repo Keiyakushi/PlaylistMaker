@@ -10,9 +10,12 @@ import com.practicum.playlistmaker.player.data.PlayerStatus
 import com.practicum.playlistmaker.player.view_model.PlayerView
 import com.practicum.playlistmaker.player.view_model.PlayerViewModel
 import com.practicum.playlistmaker.router.Router
+import com.practicum.playlistmaker.search.data.Track
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -22,8 +25,7 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
     }
 
     private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
-
-
+    lateinit var track: Track
     private val viewModel: PlayerViewModel by viewModel()
 
     override fun onPause() {
@@ -52,13 +54,33 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
             }
         }
         getData()
+        viewModel.isFavorite(track.trackId)
         viewModel.preparePlayer(getKoin().get<Router>().getTrack(this).previewUrl)
-        viewModel.SetTime.observe(this) {
+        viewModel.setFollow.observe(this) {
+            if (it) {
+                binding.btFollow.setImageResource(R.drawable.ic_bt_follow)
+            } else {
+                binding.btFollow.setImageResource(R.drawable.ic_button_follow_red)
+            }
+        }
+        viewModel.isFavorite.observe(this) {
+            if (!it) {
+                binding.btFollow.setImageResource(R.drawable.ic_bt_follow)
+            } else {
+                binding.btFollow.setImageResource(R.drawable.ic_button_follow_red)
+            }
+        }
+
+        viewModel.setTime.observe(this) {
             setCurrentTime(it)
         }
 
         binding.btPlay.setOnClickListener {
             viewModel.onBtPlayClicked(getKoin().get<Router>().getTrack(this).previewUrl)
+        }
+
+        binding.btFollow.setOnClickListener {
+            viewModel.onBtFavoriteClicked(getKoin().get<Router>().getTrack(this))
         }
 
         binding.backIconMedia.setOnClickListener {
@@ -86,7 +108,7 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
     }
 
     override fun getData() {
-        var track = getKoin().get<Router>().getTrack(this)
+        track = getKoin().get<Router>().getTrack(this)
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast("/", "512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder_media)
@@ -102,6 +124,7 @@ class MediaPlayerActivity : AppCompatActivity(), PlayerView {
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
         binding.btPlay.isEnabled = true
+
     }
 
     override fun goBack() {
