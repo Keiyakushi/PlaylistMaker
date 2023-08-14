@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -41,6 +42,7 @@ class MediaPlayerFragment : Fragment(), PlayerView {
     private lateinit var track: Track
     private val viewModel: PlayerViewModel by viewModel()
     private lateinit var playlistAdapter: PlaylistAdapter
+    private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
@@ -58,32 +60,12 @@ class MediaPlayerFragment : Fragment(), PlayerView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
         initAdapter()
         initObservers()
         initListeners()
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
-        bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
-                    }
-                    else -> {
-                        binding.overlay.visibility = View.VISIBLE
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = slideOffset
-            }
-        })
-        binding.btAddToPlaylist.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
     }
 
 
@@ -117,7 +99,6 @@ class MediaPlayerFragment : Fragment(), PlayerView {
                 }
             }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.toastContent.collect {
                 when (it) {
@@ -125,16 +106,19 @@ class MediaPlayerFragment : Fragment(), PlayerView {
                         Toast.makeText(requireContext(),
                             "Трек уже добавлен в плейлист ${it.result.playlistName}",
                             Toast.LENGTH_SHORT).show()
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     }
                     is ResultStatesBottomSheet.NotHas -> {
                         Toast.makeText(requireContext(),
                             "Добавлено в плейлист ${it.result.playlistName} ",
                             Toast.LENGTH_SHORT).show()
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     }
                     else -> {}
                 }
             }
         }
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 PlayerStatus.OnComplete -> {
@@ -176,6 +160,11 @@ class MediaPlayerFragment : Fragment(), PlayerView {
     }
 
     private fun initListeners() {
+
+        binding.btAddToPlaylist.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
         binding.btPlay.setOnClickListener {
             viewModel.onBtPlayClicked(track.previewUrl)
         }
@@ -190,6 +179,23 @@ class MediaPlayerFragment : Fragment(), PlayerView {
         binding.btAddPlaylists.setOnClickListener {
             findNavController().navigate(R.id.action_mediaPlayerFragment_to_createPlaylistsFragment)
         }
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.overlay.alpha = slideOffset
+            }
+        })
     }
 
 

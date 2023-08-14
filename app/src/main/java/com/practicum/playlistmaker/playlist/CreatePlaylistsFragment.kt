@@ -161,7 +161,7 @@ class CreatePlaylistsFragment : Fragment() {
     }
 
     private fun showDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(),R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
             .setTitle(getString(R.string.end_playlist_title))
             .setMessage(getString(R.string.playlist_message))
             .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
