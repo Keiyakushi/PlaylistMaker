@@ -60,4 +60,33 @@ class TrackDbConvertor {
             saveDate = Date().toString()
         )
     }
+    fun mapTrackToPlaylist(track: Track) : TrackToPlaylistsEntity{
+        return TrackToPlaylistsEntity(
+            id = track.trackId,
+            previewUrl = track.previewUrl,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            collectionName = track.collectionName,
+            country = track.country,
+            primaryGenreName = track.primaryGenreName,
+            releaseDate = track.releaseDate,
+            date = Date().toString()
+        )
+    }
+    fun mapTrackToPlaylist(track: TrackToPlaylistsEntity) : Track{
+        return Track(
+            previewUrl = track.previewUrl,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            trackId = track.id,
+            collectionName = track.collectionName,
+            country = track.country,
+            primaryGenreName = track.primaryGenreName,
+            releaseDate = track.releaseDate,
+        )
+    }
 }

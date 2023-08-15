@@ -1,9 +1,11 @@
 package com.practicum.playlistmaker.playlist.data
 
+import android.util.Log
 import com.practicum.playlistmaker.data.db.entity.AppDatabase
 import com.practicum.playlistmaker.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.data.db.entity.TrackDbConvertor
 import com.practicum.playlistmaker.playlist.domain.PlaylistRepository
+import com.practicum.playlistmaker.search.data.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -29,6 +31,10 @@ class PlaylistRepositoryImpl(
 
     override fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity?> {
         return appDatabase.playlistDao().getPlaylistById(playlistId)
+    }
+
+    override suspend fun insertTrackToPlaylists(track: Track) {
+        appDatabase.tracksToPlaylistDao().insertTrack(trackDbConvertor.mapTrackToPlaylist(track))
     }
 
     private fun convertFromTracksEntity(playlist: List<PlaylistEntity>): List<Playlist> {

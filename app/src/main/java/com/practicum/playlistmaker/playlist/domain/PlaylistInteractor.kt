@@ -13,4 +13,5 @@ interface PlaylistInteractor {
     fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity?>
     fun hasTrack(playlist: Playlist, track: Track): Boolean
     suspend fun addTrackToPlaylist(playlist: Playlist, track: Track)
+    suspend fun insertTrackToPlaylists(track: Track)
 }

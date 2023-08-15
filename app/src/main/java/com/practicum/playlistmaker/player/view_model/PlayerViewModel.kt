@@ -80,6 +80,7 @@ class PlayerViewModel(
             viewModelScope.launch {
                 _toastContent.value = (ResultStatesBottomSheet.NotHas(playlist))
                 playlistInteractor.addTrackToPlaylist(playlist, track)
+                playlistInteractor.insertTrackToPlaylists(track)
             }
         }
     }

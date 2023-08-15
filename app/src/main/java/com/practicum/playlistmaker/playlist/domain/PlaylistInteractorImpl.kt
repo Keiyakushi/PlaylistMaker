@@ -27,13 +27,17 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
     }
 
     override fun hasTrack(playlist: Playlist, track: Track): Boolean {
-        return playlist.trackList.contains(track)
+        return playlist.trackList.contains(track.trackId.toString())
     }
 
     override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
-        playlist.trackList = playlist.trackList + track
-        playlist.countTracks = playlist.trackList.size
+        playlist.trackList = playlist.trackList + track.trackId
+        playlist.countTracks = playlist.countTracks.inc()
         repository.updateTracks(playlist)
+    }
+
+    override suspend fun insertTrackToPlaylists(track: Track) {
+        repository.insertTrackToPlaylists(track)
     }
 
 }

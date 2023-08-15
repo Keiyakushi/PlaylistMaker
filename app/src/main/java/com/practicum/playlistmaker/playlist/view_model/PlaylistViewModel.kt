@@ -69,7 +69,7 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
                 imageUrl = imageUrl,
                 playlistName = playlistName,
                 playlistDescription = playlistDescription,
-                trackList = emptyList(),
+                trackList = "",
                 countTracks = 0
             ))
         }

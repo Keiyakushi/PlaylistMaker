@@ -32,7 +32,6 @@ import java.util.*
 
 class MediaPlayerFragment : Fragment(), PlayerView {
     companion object {
-        const val MEDIA_KEY = "MEDIA_KEY"
         const val ARGS_TRACK = "args_track"
         fun createArgs(track: Track): Bundle =
             bundleOf(ARGS_TRACK to Json.encodeToString(track))

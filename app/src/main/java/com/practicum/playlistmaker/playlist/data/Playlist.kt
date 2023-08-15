@@ -9,6 +9,6 @@ data class Playlist(
     val playlistDescription: String,
     val imageUrl: String,
     @Serializable
-    var trackList: List<Track>,
+    var trackList: String,
     var countTracks: Int,
 )
