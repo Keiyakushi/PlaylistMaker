@@ -31,7 +31,7 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
     }
 
     override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
-        playlist.trackList = playlist.trackList + track.trackId
+        playlist.trackList = playlist.trackList + track.trackId + ","
         playlist.countTracks = playlist.countTracks.inc()
         repository.updateTracks(playlist)
     }
