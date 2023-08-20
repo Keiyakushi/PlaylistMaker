@@ -9,12 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.router.Router
+import com.practicum.playlistmaker.player.activity.MediaPlayerFragment
 import com.practicum.playlistmaker.search.activity.TrackAdapter
 import com.practicum.playlistmaker.search.data.SearchState
 import com.practicum.playlistmaker.search.data.Track
@@ -23,7 +24,6 @@ import com.practicum.playlistmaker.search.view_model.SearchViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -71,7 +71,6 @@ class SearchFragment : Fragment(), SearchScreenView {
         super.onViewCreated(view, savedInstanceState)
         trackAdapter = initTrackAdapter(binding.recyclerView)
         trackHistoryAdapter = initTrackHistoryAdapter(binding.historySearchList)
-
         viewModel.clearHistoryListLiveData.observe(viewLifecycleOwner) {
             if (viewModel.addAllToHistory().isEmpty()) {
                 hideHistory()
@@ -167,7 +166,8 @@ class SearchFragment : Fragment(), SearchScreenView {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
-                getKoin().get<Router>().addToMedia(it, requireActivity() as AppCompatActivity)
+                findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment,
+                    MediaPlayerFragment.createArgs(it))
             }
         }
         trackHistoryAdapter.trackAdapterList = historyList
@@ -181,7 +181,8 @@ class SearchFragment : Fragment(), SearchScreenView {
             if (clickDebounce()) {
                 binding.historySearchList.adapter?.notifyDataSetChanged()
                 addTrackToHistory(it)
-                getKoin().get<Router>().addToMedia(it, requireActivity() as AppCompatActivity)
+                findNavController().navigate(R.id.action_searchFragment_to_mediaPlayerFragment,
+                    MediaPlayerFragment.createArgs(it))
             }
         }
         trackAdapter.trackAdapterList = trackList
@@ -195,7 +196,7 @@ class SearchFragment : Fragment(), SearchScreenView {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
+            lifecycleScope.launch {
                 delay(CLICK_DEBOUNCE_DELAY_MS)
                 isClickAllowed = true
             }

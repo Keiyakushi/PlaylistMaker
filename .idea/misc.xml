@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/bottom_sheet_bg.xml" value="0.2625" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/cursor_edit_text.xml" value="0.1" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/for_snack_bar.xml" value="0.2625" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_arrow.xml" value="0.242" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_back_icon.xml" value="0.248" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_add_playlist.xml" value="0.242" />
@@ -12,7 +14,10 @@
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_pause.xml" value="0.2565" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_pause_dark.xml" value="0.155" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_play.xml" value="0.2565" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_bt_play_dark.xml" value="0.2625" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_button_follow_red.xml" value="0.1375" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_clear.xml" value="0.261" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_none_image.xml" value="0.2175" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_nothing_search_dark.xml" value="0.155" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_nothing_search_light.xml" value="0.2335" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/ic_placeholder.xml" value="0.2335" />
@@ -23,6 +28,7 @@
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/rectangle_dash.xml" value="0.262" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/rectangle_to_fill.xml" value="0.262" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/rounded_edittext.xml" value="0.261" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/drawable/rounder.xml" value="0.2625" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_media.xml" value="0.22" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_media_store.xml" value="0.14959016393442623" />
@@ -31,12 +37,14 @@
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_search.xml" value="0.22" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/activity_settings2.xml" value="0.3009833262077811" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/bottom_sheet_list_view.xml" value="0.5" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_create_playlists.xml" value="0.25" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_follow_tracks.xml" value="0.33" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_media_store_tab.xml" value="0.3009833262077811" />
-        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_playlists.xml" value="0.5" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_playlists.xml" value="0.22" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_search.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/fragment_settings.xml" value="0.3009833262077811" />
+        <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/playlist_list_view.xml" value="0.5" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/layout/track_list_view.xml" value="0.33" />
         <entry key="..\:/Users/nikul/AndroidStudioProjects/PlaylistMaker/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.3009833262077811" />
       </map>

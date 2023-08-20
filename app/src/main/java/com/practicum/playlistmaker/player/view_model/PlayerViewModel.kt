@@ -4,18 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.media.data.ResultStates
+import com.practicum.playlistmaker.media.data.ResultStatesBottomSheet
 import com.practicum.playlistmaker.player.data.PlayerStatus
 import com.practicum.playlistmaker.player.domain.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.PlayerState
+import com.practicum.playlistmaker.playlist.data.Playlist
+import com.practicum.playlistmaker.playlist.domain.PlaylistInteractor
 import com.practicum.playlistmaker.search.data.Track
 import com.practicum.playlistmaker.search.domain.db.FavoriteInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val interactor: MediaPlayerInteractor,
     private val favInteractor: FavoriteInteractor,
+    private val playlistInteractor: PlaylistInteractor,
 ) : ViewModel() {
     companion object {
         private const val DELAY = 300L
@@ -29,6 +36,11 @@ class PlayerViewModel(
     val setFollow = _setFollow
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite = _isFavorite
+    private val _toastContent: MutableStateFlow<ResultStatesBottomSheet> =
+        MutableStateFlow(ResultStatesBottomSheet.Empty)
+    val toastContent = _toastContent
+    private val _showContent: MutableStateFlow<ResultStates> = MutableStateFlow(ResultStates.Empty)
+    val showContent = _showContent
     private var timerJob: Job? = null
     private var isFavoriteChek: Boolean = false
 
@@ -39,6 +51,39 @@ class PlayerViewModel(
         timerJob?.cancel()
     }
 
+    init {
+        fillData()
+    }
+
+    private fun fillData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistInteractor
+                .getSavedPlaylists()
+                .collect {
+                    result(it)
+                }
+        }
+    }
+
+    fun result(playlist: List<Playlist>) {
+        if (playlist.isEmpty()) {
+            _showContent.value = (ResultStates.Empty)
+        } else {
+            _showContent.value = (ResultStates.HasPlaylists(playlist))
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        if (playlistInteractor.hasTrack(playlist, track)) {
+            _toastContent.value = (ResultStatesBottomSheet.AlreadyHas(playlist))
+        } else {
+            viewModelScope.launch {
+                _toastContent.value = (ResultStatesBottomSheet.NotHas(playlist))
+                playlistInteractor.addTrackToPlaylist(playlist, track)
+                playlistInteractor.insertTrackToPlaylists(track)
+            }
+        }
+    }
 
     fun preparePlayer(url: String) {
         interactor.preparePlayer(

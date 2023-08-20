@@ -21,12 +21,13 @@
         android:theme="@style/Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".player.activity.MediaPlayerActivity"
-            android:exported="false" />
+            android:name=".player.activity.MediaPlayerFragment"
+            android:exported="false"
+            />
         <activity
             android:name=".ui.root.RootActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />

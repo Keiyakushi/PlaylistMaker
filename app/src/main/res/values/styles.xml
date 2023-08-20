@@ -36,14 +36,20 @@
         <item name="android:textSize">14sp</item>
     </style>
     <style name="InputTextLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:textColor">?attr/bt_play</item>
-        <item name="android:textColorHint">"?attr/bt_play"</item>
         <item name="boxCornerRadiusTopEnd">@dimen/five_dp</item>
         <item name="boxCornerRadiusTopStart">@dimen/five_dp</item>
         <item name="boxCornerRadiusBottomEnd">@dimen/five_dp</item>
         <item name="boxCornerRadiusBottomStart">@dimen/five_dp</item>
         <item name="boxStrokeColor">@color/input_text_layout</item>
         <item name="boxStrokeWidth">1dp</item>
+        <item name="hintTextColor">@color/input_text_layout</item>
         <item name="boxStrokeWidthFocused">1dp</item>
+    </style>
+    <style name="MyThemeOverlay.MaterialComponents.MaterialAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+    <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/track_text</item>
     </style>
 </resources>

@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.application.App
 import com.practicum.playlistmaker.data.db.entity.AppDatabase
 import com.practicum.playlistmaker.player.data.HandlerR
-import com.practicum.playlistmaker.router.Router
 import com.practicum.playlistmaker.search.data.Network
 import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.data.iTunesApi
@@ -43,6 +42,5 @@ val dataModule = module {
     singleOf(::SharedPreSettings).bind<ISettingsStorage>()
     singleOf(::SettingsRouter).bind<ISettingsRouter>()
     factoryOf(::HandlerR).bind()
-    factoryOf(::Router).bind()
     factoryOf(::Gson).bind()
 }
