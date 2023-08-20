@@ -4,7 +4,7 @@ package com.practicum.playlistmaker.settings.domain
 class RouterInteractor(
     private val router: ISettingsRouter,
 ) : IRouterInteractor {
-    override fun shareApp(url : String) {
+    override fun shareApp(url: String) {
         router.shareLink(url)
     }
 

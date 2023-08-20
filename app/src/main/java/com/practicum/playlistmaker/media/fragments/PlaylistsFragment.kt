@@ -47,7 +47,8 @@ class PlaylistsFragment : Fragment() {
 
     private fun initObservers() {
         binding.btAddPlaylists.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistsFragment,CreatePlaylistsFragment.createArgs(null))
+            findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistsFragment,
+                CreatePlaylistsFragment.createArgs(null))
         }
         viewLifecycleOwner.lifecycle.coroutineScope.launch {
             viewModel.showContent.collect {

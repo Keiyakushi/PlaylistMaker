@@ -52,6 +52,7 @@ class SettingsViewModel(
             }
         )
     }
+
     private fun getShareAppLink(): String {
         return ("https://practicum.yandex.ru/android-developer/")
     }

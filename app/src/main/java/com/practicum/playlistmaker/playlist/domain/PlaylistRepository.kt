@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.playlist.domain
 
-import com.practicum.playlistmaker.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.playlist.data.Playlist
 import com.practicum.playlistmaker.search.data.Track
 import kotlinx.coroutines.flow.Flow

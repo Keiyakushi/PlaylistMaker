@@ -42,7 +42,7 @@ class MediaPlayerFragment : Fragment(), PlayerView {
     private lateinit var track: Track
     private val viewModel: PlayerViewModel by viewModel()
     private lateinit var playlistAdapter: PlaylistAdapter
-    private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
@@ -177,7 +177,8 @@ class MediaPlayerFragment : Fragment(), PlayerView {
             findNavController().navigateUp()
         }
         binding.btAddPlaylists.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaPlayerFragment_to_createPlaylistsFragment,CreatePlaylistsFragment.createArgs(null))
+            findNavController().navigate(R.id.action_mediaPlayerFragment_to_createPlaylistsFragment,
+                CreatePlaylistsFragment.createArgs(null))
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {

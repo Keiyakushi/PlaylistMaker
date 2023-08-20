@@ -81,7 +81,7 @@ class SearchViewModel(
             }
 
             data != null -> {
-                _tracksListLiveData.postValue(data!!)
+                _tracksListLiveData.postValue(data)
             }
         }
     }

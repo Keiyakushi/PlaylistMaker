@@ -62,7 +62,8 @@ class TrackDbConvertor {
             saveDate = Date().toString()
         )
     }
-    fun mapTrackToPlaylist(track: Track) : TrackToPlaylistsEntity{
+
+    fun mapTrackToPlaylist(track: Track): TrackToPlaylistsEntity {
         return TrackToPlaylistsEntity(
             id = track.trackId,
             previewUrl = track.previewUrl,
@@ -78,7 +79,8 @@ class TrackDbConvertor {
             date = Date().toString()
         )
     }
-    fun mapTrackToPlaylist(track: TrackToPlaylistsEntity) : Track{
+
+    fun mapTrackToPlaylist(track: TrackToPlaylistsEntity): Track {
         return Track(
             previewUrl = track.previewUrl,
             trackName = track.trackName,

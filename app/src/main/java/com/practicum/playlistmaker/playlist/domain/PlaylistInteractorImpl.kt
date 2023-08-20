@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.playlist.domain
 
-import com.practicum.playlistmaker.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.playlist.data.Playlist
 import com.practicum.playlistmaker.search.data.Track
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +35,7 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
         repository.updateTracks(playlist)
     }
 
-    override suspend fun deleteTrackFromPlaylist(playlist: Playlist,track: Track){
+    override suspend fun deleteTrackFromPlaylist(playlist: Playlist, track: Track) {
         playlist.trackList = playlist.trackList - track
         playlist.countTracks = playlist.trackList.size
         repository.updateTracks(playlist)

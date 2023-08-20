@@ -74,7 +74,7 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
                     countTracks = 0
                 ))
             }
-        }else{
+        } else {
             viewModelScope.launch {
                 interactor.updateTracks(Playlist(
                     id = playlist.id,

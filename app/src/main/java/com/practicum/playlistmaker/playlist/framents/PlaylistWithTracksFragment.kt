@@ -9,10 +9,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -23,26 +21,24 @@ import com.practicum.playlistmaker.player.activity.MediaPlayerFragment
 import com.practicum.playlistmaker.playlist.activity.PlaylistWithTracksAdapter
 import com.practicum.playlistmaker.playlist.data.Playlist
 import com.practicum.playlistmaker.playlist.view_model.PlaylistWithTracksViewModel
-import com.practicum.playlistmaker.search.activity.TrackAdapter
 import com.practicum.playlistmaker.search.data.Track
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 class PlaylistWithTracksFragment : Fragment() {
     private lateinit var binding: FragmentPlaylistWithTracksBinding
     private lateinit var playlist: Playlist
     private val viewModel by viewModel<PlaylistWithTracksViewModel>()
     private lateinit var trackAdapter: PlaylistWithTracksAdapter
-    private var hasTrack : Boolean = false
-    private lateinit var bottomSheetBehavior : BottomSheetBehavior<LinearLayout>
+    private var hasTrack: Boolean = false
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     override fun onResume() {
         super.onResume()
         viewModel.fillData(playlist.id)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,8 +60,8 @@ class PlaylistWithTracksFragment : Fragment() {
         initListeners()
     }
 
-    private fun initListeners(){
-        binding.backIconMedia.setOnClickListener{
+    private fun initListeners() {
+        binding.backIconMedia.setOnClickListener {
             findNavController().navigateUp()
         }
         binding.share.setOnClickListener {
@@ -87,37 +83,38 @@ class PlaylistWithTracksFragment : Fragment() {
         }
     }
 
-    private fun initAdapter(){
+    private fun initAdapter() {
         trackAdapter = PlaylistWithTracksAdapter({ track -> navigate(track) }
-        ) { showDialog(playlist,it)}
+        ) { showDialog(playlist, it) }
         binding.recyclerView.adapter = trackAdapter
     }
-    private fun initObservers(){
-        viewModel.hasTracks.observe(viewLifecycleOwner){
-            if (it){
+
+    private fun initObservers() {
+        viewModel.hasTracks.observe(viewLifecycleOwner) {
+            if (it) {
                 binding.emptyPlaylist.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
                 hasTrack = true
-            } else{
+            } else {
                 binding.emptyPlaylist.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
                 hasTrack = false
             }
         }
-        viewModel.getPlaylist.observe(viewLifecycleOwner){
+        viewModel.getPlaylist.observe(viewLifecycleOwner) {
             trackAdapter.trackAdapterList.clear()
             trackAdapter.trackAdapterList.addAll(it)
             trackAdapter.notifyDataSetChanged()
             refreshInfo()
         }
-        viewModel.getPlaylistData.observe(viewLifecycleOwner){
+        viewModel.getPlaylistData.observe(viewLifecycleOwner) {
             playlist = it
             refreshInfo()
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun fillData(){
+    private fun fillData() {
         playlist = requireArguments().getString(ARGS_TRACK)?.let {
             Json.decodeFromString<Playlist>(it)
         }!!
@@ -140,11 +137,14 @@ class PlaylistWithTracksFragment : Fragment() {
         binding.countTracks.text = viewModel.getCounts()
         binding.trackName.text = playlist.playlistName
     }
-    private fun navigate(it : Track){
-        findNavController().navigate(R.id.action_playlistWithTracks_to_mediaPlayerFragment,MediaPlayerFragment.createArgs(it))
+
+    private fun navigate(it: Track) {
+        findNavController().navigate(R.id.action_playlistWithTracks_to_mediaPlayerFragment,
+            MediaPlayerFragment.createArgs(it))
     }
-    private fun showDialog(playlist: Playlist,track: Track) {
-        MaterialAlertDialogBuilder(requireContext(),R.style.DialogWithBlueButtons)
+
+    private fun showDialog(playlist: Playlist, track: Track) {
+        MaterialAlertDialogBuilder(requireContext(), R.style.DialogWithBlueButtons)
             .setMessage("Хотите удалить трек?")
             .setNeutralButton("НЕТ") { _, _ -> }
             .setPositiveButton("ДА") { _, _ ->
@@ -153,8 +153,9 @@ class PlaylistWithTracksFragment : Fragment() {
             }
             .show()
     }
-    private fun showDialogDeletePlaylist(playlist: Playlist){
-        MaterialAlertDialogBuilder(requireContext(),R.style.DialogWithBlueButtons)
+
+    private fun showDialogDeletePlaylist(playlist: Playlist) {
+        MaterialAlertDialogBuilder(requireContext(), R.style.DialogWithBlueButtons)
             .setMessage("Хотите удалить плейлист «${playlist.playlistName}»?")
             .setNeutralButton("НЕТ") { _, _ -> }
             .setPositiveButton("ДА") { _, _ ->
@@ -165,7 +166,8 @@ class PlaylistWithTracksFragment : Fragment() {
             }
             .show()
     }
-    private fun refreshInfo(){
+
+    private fun refreshInfo() {
         binding.countTracks.text = viewModel.getCounts()
         binding.duration.text = viewModel.getDuration()
         binding.countTracksBottomSheet.text = viewModel.getCounts()
@@ -177,13 +179,16 @@ class PlaylistWithTracksFragment : Fragment() {
             .centerCrop()
             .into(binding.setImage)
     }
-    private fun share(){
-        if (!hasTrack){
-            Toast.makeText(requireContext(),getString(R.string.cant_share),Toast.LENGTH_SHORT).show()
+
+    private fun share() {
+        if (!hasTrack) {
+            Toast.makeText(requireContext(), getString(R.string.cant_share), Toast.LENGTH_SHORT)
+                .show()
         } else {
             viewModel.share()
         }
     }
+
     companion object {
         private const val ARGS_TRACK = "args_track"
         fun createArgs(playlist: Playlist): Bundle =

@@ -26,7 +26,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentCreatePlaylistsBinding
-import com.practicum.playlistmaker.player.activity.MediaPlayerFragment
 import com.practicum.playlistmaker.playlist.data.PermissionStates
 import com.practicum.playlistmaker.playlist.data.Playlist
 import com.practicum.playlistmaker.playlist.view_model.PlaylistViewModel
@@ -61,18 +60,19 @@ class CreatePlaylistsFragment : Fragment() {
         initListeners()
         fillData()
     }
-    private fun fillData(){
+
+    private fun fillData() {
         playlist = requireArguments().getString(ARGS_PLAYLIST).let {
             it?.let { it1 -> Json.decodeFromString(it1) }
         }
-        if (playlist != null){
+        if (playlist != null) {
             binding.textNewPlaylist.text = "Редактировать"
             Glide.with(this)
                 .load(playlist!!.imageUrl)
                 .placeholder(R.drawable.rectangle_dash)
                 .centerCrop()
                 .into(binding.setImage)
-            binding.createButton.setText("Сохранить")
+            binding.createButton.text = "Сохранить"
             binding.createButton.isEnabled = true
             binding.namingEditText.setText(playlist!!.playlistName)
             binding.descriptionEditText.setText(playlist!!.playlistDescription)
@@ -81,6 +81,7 @@ class CreatePlaylistsFragment : Fragment() {
             viewModel.savePlaylistDescription(playlist!!.playlistDescription)
         }
     }
+
     private fun initObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.permissionStateFlow.collect {
@@ -100,11 +101,11 @@ class CreatePlaylistsFragment : Fragment() {
         }
 
         viewModel.allowedToBack.observe(viewLifecycleOwner) {
-                if (it) {
-                    findNavController().navigateUp()
-                } else {
-                    showDialog()
-                }
+            if (it) {
+                findNavController().navigateUp()
+            } else {
+                showDialog()
+            }
         }
     }
 
@@ -191,7 +192,8 @@ class CreatePlaylistsFragment : Fragment() {
     }
 
     private fun showDialog() {
-        MaterialAlertDialogBuilder(requireContext(),R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
+        MaterialAlertDialogBuilder(requireContext(),
+            R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
             .setTitle(getString(R.string.end_playlist_title))
             .setMessage(getString(R.string.playlist_message))
             .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
