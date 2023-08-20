@@ -21,6 +21,7 @@ import com.practicum.playlistmaker.media.data.ResultStatesBottomSheet
 import com.practicum.playlistmaker.player.data.PlayerStatus
 import com.practicum.playlistmaker.player.view_model.PlayerView
 import com.practicum.playlistmaker.player.view_model.PlayerViewModel
+import com.practicum.playlistmaker.playlist.framents.CreatePlaylistsFragment
 import com.practicum.playlistmaker.search.data.Track
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -32,7 +33,7 @@ import java.util.*
 
 class MediaPlayerFragment : Fragment(), PlayerView {
     companion object {
-        const val ARGS_TRACK = "args_track"
+        private const val ARGS_TRACK = "args_track"
         fun createArgs(track: Track): Bundle =
             bundleOf(ARGS_TRACK to Json.encodeToString(track))
     }
@@ -111,7 +112,7 @@ class MediaPlayerFragment : Fragment(), PlayerView {
                         Toast.makeText(requireContext(),
                             "Добавлено в плейлист ${it.result.playlistName} ",
                             Toast.LENGTH_SHORT).show()
-                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     }
                     else -> {}
                 }
@@ -176,7 +177,7 @@ class MediaPlayerFragment : Fragment(), PlayerView {
             findNavController().navigateUp()
         }
         binding.btAddPlaylists.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaPlayerFragment_to_createPlaylistsFragment)
+            findNavController().navigate(R.id.action_mediaPlayerFragment_to_createPlaylistsFragment,CreatePlaylistsFragment.createArgs(null))
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {

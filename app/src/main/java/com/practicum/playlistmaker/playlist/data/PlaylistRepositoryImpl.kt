@@ -29,8 +29,8 @@ class PlaylistRepositoryImpl(
         return appDatabase.playlistDao().getSavedPlaylists().map { convertFromTracksEntity(it) }
     }
 
-    override fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity?> {
-        return appDatabase.playlistDao().getPlaylistById(playlistId)
+    override fun getPlaylistById(playlistId: Int): Flow<Playlist> {
+        return appDatabase.playlistDao().getPlaylistById(playlistId).map { trackDbConvertor.map(it) }
     }
 
     override suspend fun insertTrackToPlaylists(track: Track) {

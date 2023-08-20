@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
@@ -14,6 +13,8 @@ import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmaker.media.activity.PlaylistAdapter
 import com.practicum.playlistmaker.media.data.ResultStates
 import com.practicum.playlistmaker.media.view_model.PlaylistsViewModel
+import com.practicum.playlistmaker.playlist.framents.CreatePlaylistsFragment
+import com.practicum.playlistmaker.playlist.framents.PlaylistWithTracksFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,7 +38,8 @@ class PlaylistsFragment : Fragment() {
 
     private fun initAdapter() {
         playlistAdapter = PlaylistAdapter {
-            Toast.makeText(requireContext(), "Clicked", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_mediaFragment_to_playlistWithTracks,
+                PlaylistWithTracksFragment.createArgs(it))
         }
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = playlistAdapter
@@ -45,7 +47,7 @@ class PlaylistsFragment : Fragment() {
 
     private fun initObservers() {
         binding.btAddPlaylists.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistsFragment)
+            findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistsFragment,CreatePlaylistsFragment.createArgs(null))
         }
         viewLifecycleOwner.lifecycle.coroutineScope.launch {
             viewModel.showContent.collect {

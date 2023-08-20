@@ -19,5 +19,5 @@ interface PlaylistDao {
     fun getSavedPlaylists(): Flow<List<PlaylistEntity>>
 
     @Query("SELECT * FROM playlists_table WHERE id = :playlistId")
-    fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity?>
+    fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity>
 }

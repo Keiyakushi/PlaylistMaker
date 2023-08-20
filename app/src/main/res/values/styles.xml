@@ -52,4 +52,11 @@
     <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">?attr/track_text</item>
     </style>
+    <style name="DialogWithBlueButtons" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyleBlue</item>
+        <item name="buttonBarNeutralButtonStyle">@style/PositiveButtonStyleBlue</item>
+    </style>
+    <style name="PositiveButtonStyleBlue" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/dark_blue</item>
+    </style>
 </resources>
