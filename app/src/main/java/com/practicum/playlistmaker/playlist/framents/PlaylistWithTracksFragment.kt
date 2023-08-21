@@ -103,7 +103,11 @@ class PlaylistWithTracksFragment : Fragment() {
         }
         viewModel.getPlaylist.observe(viewLifecycleOwner) {
             trackAdapter.trackAdapterList.clear()
-            trackAdapter.trackAdapterList.addAll(it)
+            if (it.size < 1) {
+                trackAdapter.trackAdapterList.addAll(it)
+            } else {
+                trackAdapter.trackAdapterList.addAll(it.reversed())
+            }
             trackAdapter.notifyDataSetChanged()
             refreshInfo()
         }
