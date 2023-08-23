@@ -42,6 +42,19 @@ class PlaylistWithTracksViewModel(
 
     fun deleteTrackFromPlaylist(playlist: Playlist, track: Track) {
         viewModelScope.launch {
+            var counter = 0
+            playlistInteractor.getSavedPlaylists().collect{list ->
+                list.forEach {
+                    if (it.trackList.contains(track)){
+                        counter += 1
+                    }
+                }
+                if (counter<=1){
+                    playlistInteractor.deleteTrack(track)
+                }
+            }
+        }
+        viewModelScope.launch {
             playlistInteractor.deleteTrackFromPlaylist(playlist, track)
         }
     }

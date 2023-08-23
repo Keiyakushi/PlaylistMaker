@@ -37,6 +37,10 @@ class PlaylistRepositoryImpl(
         appDatabase.tracksToPlaylistDao().insertTrack(trackDbConvertor.mapTrackToPlaylist(track))
     }
 
+    override suspend fun deleteTrack(track: Track){
+        appDatabase.tracksToPlaylistDao().deleteTrackEntity(trackDbConvertor.mapTrackToPlaylist(track))
+    }
+
     private fun convertFromTracksEntity(playlist: List<PlaylistEntity>): List<Playlist> {
         return playlist.map { playlist -> trackDbConvertor.map(playlist) }
     }
