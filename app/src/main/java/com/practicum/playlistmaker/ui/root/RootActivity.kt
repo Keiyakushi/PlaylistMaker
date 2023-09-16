@@ -25,7 +25,10 @@ class RootActivity : AppCompatActivity() {
                 R.id.createPlaylistsFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
-                R.id.mediaPlayerFragment ->{
+                R.id.mediaPlayerFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
+                R.id.playlistWithTracks -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
                 else -> {

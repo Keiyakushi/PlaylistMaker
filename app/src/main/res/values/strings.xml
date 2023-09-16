@@ -56,4 +56,8 @@
     <string name="playlist">Плейлист</string>
     <string name="created">создан.</string>
     <string name="add_in_playlist">Добавить в плейлист</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="change_info">Редактировать информацию</string>
+    <string name="only_shared">Поделиться</string>
+    <string name="cant_share">В этом плейлисте нет списка терокв,которым можно поделиться</string>
 </resources>

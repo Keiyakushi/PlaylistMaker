@@ -29,7 +29,7 @@ class SettingsViewModel(
     }
 
     fun onShareAppClicked() {
-        router.shareApp()
+        router.shareApp(getShareAppLink())
     }
 
     fun onSupportClicked() {
@@ -51,5 +51,9 @@ class SettingsViewModel(
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+    }
+
+    private fun getShareAppLink(): String {
+        return ("https://practicum.yandex.ru/android-developer/")
     }
 }

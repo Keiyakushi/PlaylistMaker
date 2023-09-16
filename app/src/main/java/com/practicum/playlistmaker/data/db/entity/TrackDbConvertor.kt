@@ -16,6 +16,7 @@ class TrackDbConvertor {
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
             artworkUrl100 = track.artworkUrl100,
+            track.artworkUrl60,
             collectionName = track.collectionName,
             country = track.country,
             primaryGenreName = track.primaryGenreName,
@@ -31,6 +32,7 @@ class TrackDbConvertor {
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
             artworkUrl100 = track.artworkUrl100,
+            track.artworkUrl60,
             trackId = track.id,
             collectionName = track.collectionName,
             country = track.country,
@@ -60,7 +62,8 @@ class TrackDbConvertor {
             saveDate = Date().toString()
         )
     }
-    fun mapTrackToPlaylist(track: Track) : TrackToPlaylistsEntity{
+
+    fun mapTrackToPlaylist(track: Track): TrackToPlaylistsEntity {
         return TrackToPlaylistsEntity(
             id = track.trackId,
             previewUrl = track.previewUrl,
@@ -68,6 +71,7 @@ class TrackDbConvertor {
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
             artworkUrl100 = track.artworkUrl100,
+            track.artworkUrl60,
             collectionName = track.collectionName,
             country = track.country,
             primaryGenreName = track.primaryGenreName,
@@ -75,13 +79,15 @@ class TrackDbConvertor {
             date = Date().toString()
         )
     }
-    fun mapTrackToPlaylist(track: TrackToPlaylistsEntity) : Track{
+
+    fun mapTrackToPlaylist(track: TrackToPlaylistsEntity): Track {
         return Track(
             previewUrl = track.previewUrl,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
             artworkUrl100 = track.artworkUrl100,
+            track.artworkUrl60,
             trackId = track.id,
             collectionName = track.collectionName,
             country = track.country,

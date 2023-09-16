@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.playlist
+package com.practicum.playlistmaker.playlist.framents
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -26,9 +27,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentCreatePlaylistsBinding
 import com.practicum.playlistmaker.playlist.data.PermissionStates
+import com.practicum.playlistmaker.playlist.data.Playlist
 import com.practicum.playlistmaker.playlist.view_model.PlaylistViewModel
 import com.practicum.playlistmaker.settings.domain.ISettingsInteractor
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -37,6 +41,7 @@ import java.io.FileOutputStream
 class CreatePlaylistsFragment : Fragment() {
     private lateinit var binding: FragmentCreatePlaylistsBinding
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    private var playlist: Playlist? = null
     private val viewModel by viewModel<PlaylistViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +58,28 @@ class CreatePlaylistsFragment : Fragment() {
         initPickMedia()
         initObservers()
         initListeners()
+        fillData()
+    }
+
+    private fun fillData() {
+        playlist = requireArguments().getString(ARGS_PLAYLIST).let {
+            it?.let { it1 -> Json.decodeFromString(it1) }
+        }
+        if (playlist != null) {
+            binding.textNewPlaylist.text = "Редактировать"
+            Glide.with(this)
+                .load(playlist!!.imageUrl)
+                .placeholder(R.drawable.rectangle_dash)
+                .centerCrop()
+                .into(binding.setImage)
+            binding.createButton.text = "Сохранить"
+            binding.createButton.isEnabled = true
+            binding.namingEditText.setText(playlist!!.playlistName)
+            binding.descriptionEditText.setText(playlist!!.playlistDescription)
+            viewModel.saveImageUri(playlist!!.imageUrl)
+            viewModel.savePlaylistName(playlist!!.playlistName)
+            viewModel.savePlaylistDescription(playlist!!.playlistDescription)
+        }
     }
 
     private fun initObservers() {
@@ -88,14 +115,14 @@ class CreatePlaylistsFragment : Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    viewModel.onBackPressed()
+                    viewModel.onBackPressed(playlist)
                 }
             })
         binding.setImage.setOnClickListener {
             viewModel.onImageClicked()
         }
         binding.backIconMedia.setOnClickListener {
-            viewModel.onBackPressed()
+            viewModel.onBackPressed(playlist)
         }
         binding.namingEditText.doOnTextChanged { text, _, _, _ ->
             setColorStrokeNaming(text.toString())
@@ -107,9 +134,13 @@ class CreatePlaylistsFragment : Fragment() {
             viewModel.savePlaylistDescription(text.toString())
         }
         binding.createButton.setOnClickListener {
-            viewModel.onCreateBtClicked()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.onCreateBtClicked(playlist)
+            }
             findNavController().navigateUp()
-            showSnackbar(binding.namingEditText.text.toString())
+            if (playlist == null) {
+                showSnackbar(binding.namingEditText.text.toString())
+            }
         }
     }
 
@@ -161,7 +192,8 @@ class CreatePlaylistsFragment : Fragment() {
     }
 
     private fun showDialog() {
-        MaterialAlertDialogBuilder(requireContext(),R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
+        MaterialAlertDialogBuilder(requireContext(),
+            R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
             .setTitle(getString(R.string.end_playlist_title))
             .setMessage(getString(R.string.playlist_message))
             .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
@@ -217,5 +249,8 @@ class CreatePlaylistsFragment : Fragment() {
     companion object {
         private const val QUALITY_IMAGE = 30
         private const val MESSAGE_DURATION = 4000
+        private const val ARGS_PLAYLIST = "args_playlist"
+        fun createArgs(playlist: Playlist?): Bundle =
+            bundleOf(CreatePlaylistsFragment.ARGS_PLAYLIST to Json.encodeToString(playlist))
     }
 }

@@ -62,22 +62,39 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
         imageUrl = uri
     }
 
-    fun onCreateBtClicked() {
-        viewModelScope.launch {
-            interactor.insertPlaylist(Playlist(
-                id = 0,
-                imageUrl = imageUrl,
-                playlistName = playlistName,
-                playlistDescription = playlistDescription,
-                trackList = "",
-                countTracks = 0
-            ))
+    fun onCreateBtClicked(playlist: Playlist?) {
+        if (playlist == null) {
+            viewModelScope.launch {
+                interactor.insertPlaylist(Playlist(
+                    id = 0,
+                    imageUrl = imageUrl,
+                    playlistName = playlistName,
+                    playlistDescription = playlistDescription,
+                    trackList = emptyList(),
+                    countTracks = 0
+                ))
+            }
+        } else {
+            viewModelScope.launch {
+                interactor.updateTracks(Playlist(
+                    id = playlist.id,
+                    playlistName = playlistName,
+                    playlistDescription = playlistDescription,
+                    imageUrl = imageUrl,
+                    trackList = playlist.trackList,
+                    countTracks = playlist.countTracks,
+                ))
+            }
         }
     }
 
-    fun onBackPressed() {
-        if (imageUrl.isNotEmpty() || playlistName.isNotEmpty() || playlistDescription.isNotEmpty()) {
-            _allowedToBack.postValue(false)
+    fun onBackPressed(playlist: Playlist?) {
+        if (playlist == null) {
+            if (imageUrl.isNotEmpty() || playlistName.isNotEmpty() || playlistDescription.isNotEmpty()) {
+                _allowedToBack.postValue(false)
+            } else {
+                _allowedToBack.postValue(true)
+            }
         } else {
             _allowedToBack.postValue(true)
         }

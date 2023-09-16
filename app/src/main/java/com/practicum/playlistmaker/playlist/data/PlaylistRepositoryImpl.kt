@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.playlist.data
 
-import android.util.Log
 import com.practicum.playlistmaker.data.db.entity.AppDatabase
 import com.practicum.playlistmaker.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.data.db.entity.TrackDbConvertor
@@ -29,12 +28,17 @@ class PlaylistRepositoryImpl(
         return appDatabase.playlistDao().getSavedPlaylists().map { convertFromTracksEntity(it) }
     }
 
-    override fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity?> {
+    override fun getPlaylistById(playlistId: Int): Flow<Playlist> {
         return appDatabase.playlistDao().getPlaylistById(playlistId)
+            .map { trackDbConvertor.map(it) }
     }
 
     override suspend fun insertTrackToPlaylists(track: Track) {
         appDatabase.tracksToPlaylistDao().insertTrack(trackDbConvertor.mapTrackToPlaylist(track))
+    }
+
+    override suspend fun deleteTrack(track: Track){
+        appDatabase.tracksToPlaylistDao().deleteTrackEntity(trackDbConvertor.mapTrackToPlaylist(track))
     }
 
     private fun convertFromTracksEntity(playlist: List<PlaylistEntity>): List<Playlist> {
